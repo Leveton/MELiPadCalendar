@@ -16,7 +16,7 @@ Table rows and font sizes scale dynamically depending on how large you make the 
 ## Demo
 
 Build and run the `iPadCalendar` project in Xcode. 
-I've included a JSON file in the demo to simulate an API response.
+I've included a JSON file and its dependencies in the demo to simulate an API response.
 
 ## Installation
 
