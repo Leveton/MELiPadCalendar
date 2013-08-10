@@ -1,0 +1,18 @@
+//
+// Prefix header for all source files of the 'iPadCalendar' target in the 'iPadCalendar' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_4_0
+#warning "This project uses features only available in iOS SDK 4.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#endif
+
+#define API_KEY                 @"A0B1I2L3A4L5-A1D3-4F30-5AB2-C8DEE266"
+#define CAPTAIN_URL @"http://staging2.sdsol.com/btservices/captain.asmx/"
+#define SCHEDULES_AND_SHIFTS_URL @"CaptainScheduleAndShifts?apiKey=%@&CaptainID=%@&dtStart=%@&dtEnd=%@"
