@@ -25,8 +25,11 @@ Add `QuartzCore.framework` and `EventKit.framework` if you don't already have th
 
 ## Use
 
+Make sure you declare an instance of `MELiPadCalendarView`, `NSDate`, and `CGRect` as either properties or ivars.
+
 Before initiating the calendar, initiate three arrays, one for the dates which will contain data, another for the todo start times and another for the todo end times.
-After that, hit your API and populate the three arrays before initiating the calendar.
+
+After that, you can hit your API and populate the three arrays before initiating the calendar.
 
 ```objc
 - (id)init {
@@ -45,24 +48,15 @@ After that, hit your API and populate the three arrays before initiating the cal
 ```
 
 Initiate the calendar.
+The frame and date need to be captured for transitioning between months.
 
 ```objc
-	calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,54,770,640)];
-
-	calendar.delegate = self;
+	calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,20,770,640)];
+    
+    calendar.delegate = self;
     frameChosen = calendar.frame;
-
-	orientationDate = [NSDate date];
-
-	//highlight the current date, or a range of dates
-	NSString *stringFromDate = [self.dateFormatter stringFromDate:orientationDate];
-	calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-	calendar.minimumDate = [self.dateFormatter dateFromString:@""];
-	calendar.maximumDate = [self.dateFormatter dateFromString:@""];
-	calendar.shouldFillCalendar = NO;
-	calendar.adaptHeightToNumberOfWeeksInMonth = YES;
-
-	[self.view addSubview:calendar];
+    orientationDate = [NSDate date];
+    [self.view addSubview:calendar];
 ```
 
 - initWithStartDay can either be startSunday or startMonday and the date range will be Sunday to Saturday or Monday to Sunday respectively.
@@ -74,27 +68,28 @@ Initiate the calendar.
 - endTimes is an NSMutableArray that stores the end time for the todo.
 
 When a user attempts to move to the previous or next month, the calendar will call `transitionToPreviousMonth` and `transitionToNextMonth` respectively on the delegate (if the delegate implements them).
-In these methods, the entire calendar must be removed and reinitiated in order to accomodate the new data (thanks LLVM!).
+In these methods, the entire calendar must be removed and reinitiated in order to accomodate larger months such as June, and any new data.
 
 ``` objc
 - (void)transitionToPreviousMonth
 {
     [self.calendar removeFromSuperview];
     
-    self.calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents* comps = [[NSDateComponents alloc] init];
     [comps setMonth:-1];
-    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
+    self.orientationDate = [calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
     
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    dateFormatter.dateFormat = @"MM/dd/yyyy";
     
-   calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,12,770,580)];
+    NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
+    
+    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
     
     calendar.delegate = self;
-    calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    calendar.shouldFillCalendar = NO;
-    calendar.adaptHeightToNumberOfWeeksInMonth = YES;
-
+    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
+    
     [self.view addSubview:calendar];
 }
 ```

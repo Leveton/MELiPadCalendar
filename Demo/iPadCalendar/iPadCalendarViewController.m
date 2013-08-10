@@ -5,11 +5,7 @@
 @interface iPadCalendarViewController () 
 
 @property (nonatomic, strong) MELiPadCalendarView *calendar;
-@property (nonatomic, strong) UILabel *dateLabel;
-@property (nonatomic, strong) NSDateFormatter *dateFormatter;
-@property (nonatomic, weak) UIButton *pickDay;
 @property (nonatomic, strong) NSDate *orientationDate;
-@property (nonatomic, strong) NSCalendar *calendarForOrientation;
 @property (nonatomic, assign) CGRect frameChosen;
 @end
 
@@ -36,18 +32,20 @@
 {
     
     [super viewDidLoad];
-    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,12,770,580)];
+    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,20,770,640)];
     
     calendar.delegate = self;
     frameChosen = calendar.frame;
     
     orientationDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    dateFormatter.dateFormat = @"MM/dd/yyyy";
     
     //highlight the current date, or a range of dates
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:orientationDate];
-    calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    calendar.minimumDate = [self.dateFormatter dateFromString:@""];
-    calendar.maximumDate = [self.dateFormatter dateFromString:@""];
+    NSString *stringFromDate = [dateFormatter stringFromDate:orientationDate];
+    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
+    calendar.minimumDate = [dateFormatter dateFromString:@""];
+    calendar.maximumDate = [dateFormatter dateFromString:@""];
     calendar.shouldFillCalendar = NO;
     calendar.adaptHeightToNumberOfWeeksInMonth = YES;
     
@@ -55,7 +53,6 @@
     
     self.view.backgroundColor = BlueColor;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localeDidChange) name:NSCurrentLocaleDidChangeNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,15 +60,15 @@
     [super didReceiveMemoryWarning];
 }
 
-- (NSDateFormatter *)dateFormatter
-{
-    if (! _dateFormatter)
-    {
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"MM/dd/yyyy";
-    }
-    return _dateFormatter;
-}
+//- (NSDateFormatter *)dateFormatter
+//{
+//    if (! _dateFormatter)
+//    {
+//        _dateFormatter = [[NSDateFormatter alloc] init];
+//        _dateFormatter.dateFormat = @"MM/dd/yyyy";
+//    }
+//    return _dateFormatter;
+//}
 
 #pragma delegates
 
@@ -84,17 +81,20 @@
 {
     [self.calendar removeFromSuperview];
     
-    self.calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents* comps = [[NSDateComponents alloc] init];
     [comps setMonth:-1];
-    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
+    self.orientationDate = [calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
     
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    dateFormatter.dateFormat = @"MM/dd/yyyy";
     
-   calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
+    NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
+    
+    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
     
     calendar.delegate = self;
-    calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
     calendar.shouldFillCalendar = NO;
     calendar.adaptHeightToNumberOfWeeksInMonth = YES;
 
@@ -106,17 +106,20 @@
     
     [self.calendar removeFromSuperview];
     
-    self.calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents* comps = [[NSDateComponents alloc] init];
     [comps setMonth:1];
-    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
+    self.orientationDate = [calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
     
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    dateFormatter.dateFormat = @"MM/dd/yyyy";
+    
+    NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
     
     calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
     
     calendar.delegate = self;
-    calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
     calendar.shouldFillCalendar = NO;
     calendar.adaptHeightToNumberOfWeeksInMonth = YES;
     
