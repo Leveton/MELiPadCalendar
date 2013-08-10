@@ -29,7 +29,7 @@ Make sure you declare an instance of `MELiPadCalendarView`, `NSDate`, and `CGRec
 
 Before initiating the calendar, initiate three arrays, one for the dates which will contain data, another for the todo start times and another for the todo end times.
 
-After that, you can hit your API and populate the three arrays before initiating the calendar.
+After that, you can hit your API where you'll populate the three arrays before adding the calendar to some method.
 
 ```objc
 - (id)init {
@@ -67,7 +67,7 @@ The frame and date need to be captured for transitioning between months.
 
 - endTimes is an NSMutableArray that stores the end time for the todo.
 
-When a user attempts to move to the previous or next month, the calendar will call `transitionToPreviousMonth` and `transitionToNextMonth` respectively on the delegate (if the delegate implements them).
+When a user attempts to move to the previous or next month, the calendar will call `transitionToPreviousMonth` and `transitionToNextMonth` respectively on the delegate.
 In these methods, the entire calendar must be removed and reinitiated in order to accomodate larger months such as June, and any new data.
 
 ``` objc
