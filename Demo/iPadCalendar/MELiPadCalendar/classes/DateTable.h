@@ -14,14 +14,15 @@
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSCalendar *calendar;
-@property (nonatomic, retain) NSMutableArray *dataForTable;
-@property (nonatomic, retain) NSMutableArray *arrayOfDates;
-@property (nonatomic, retain) NSMutableArray *arrayOfStartTimes;
-@property (nonatomic, retain) NSMutableArray *arrayOfEndTimes; 
-@property (nonatomic, retain) NSMutableArray *startTimesAndEndTimes;
+@property (nonatomic, strong) NSMutableArray *dataForTable;
+@property (nonatomic, strong) NSArray *arrayOfDates;
+@property (nonatomic, strong) NSArray *arrayOfStartTimes;
+@property (nonatomic, strong) NSArray *arrayOfEndTimes;
+@property (nonatomic, strong) NSMutableArray *startTimesAndEndTimes;
 @property (nonatomic, strong) NSDateFormatter *formatter;
-@property (nonatomic, retain) NSString *jobForDate;
-@property (nonatomic, readwrite) int dateTotal;
-@property (nonatomic, readwrite) int tableViewHeight;
+@property (nonatomic, strong) NSString *jobForDate;
+@property NSInteger dateTotal;
+@property NSInteger tableViewHeight;
+
 
 @end

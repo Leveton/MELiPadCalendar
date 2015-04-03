@@ -14,15 +14,22 @@
 @end
 
 @implementation DateTable
-@synthesize date = _date;
-@synthesize calendar = _calendar;
-@synthesize arrayOfDates = _arrayOfDates;
-@synthesize arrayOfStartTimes = _arrayOfStartTimes;
-@synthesize arrayOfEndTimes = _arrayOfEndTimes;
-@synthesize startTimesAndEndTimes = _startTimesAndEndTimes;
-@synthesize dataForTable = _dataForTable;
-@synthesize jobForDate = _jobForDate;
-@synthesize dateTotal, tableViewHeight;
+
+-(id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self != nil)
+    {
+         _tableViewHeight = frame.size.height;
+//        CGFloat xOffset = frame.origin.x;
+//        CGFloat yOffset = frame.origin.y;
+//        CGFloat width =  frame.size.width;
+//        CGFloat height = frame.size.height;
+//        NSLog(@"x: %f y: %f width: %f height %f", xOffset, yOffset, width, height);
+
+    }
+    return self;
+}
 
 - (void)setDate:(NSDate *)date
 {
@@ -72,7 +79,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    tableViewHeight = tableView.frame.size.height;//this delegate gets called first, so set it here.
     return 1;
 }
 
@@ -95,14 +101,14 @@
     if (indexPath.row == 0)
     {
         cell1.textLabel.textColor = BlueColorMinus3;
-        UIFont *myFont = [ UIFont fontWithName: @"Georgia-Bold" size: (tableViewHeight/9.8f)];
+        UIFont *myFont = [ UIFont fontWithName: @"Georgia-Bold" size: (_tableViewHeight/9.8f)];
         cell1.textLabel.font = myFont;
         return cell1;
     }
     else
     {
         cell1.textLabel.textColor = [UIColor redColor];
-        UIFont *myFont = [ UIFont fontWithName: @"Arial" size: (tableViewHeight/9.8f)];
+        UIFont *myFont = [ UIFont fontWithName: @"Arial" size: (_tableViewHeight/9.8f)];
         cell1.textLabel.font = myFont;
         return cell1;
 
@@ -124,7 +130,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (tableViewHeight/6);
+    return (_tableViewHeight/6);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

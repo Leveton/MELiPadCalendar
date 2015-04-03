@@ -20,19 +20,19 @@ enum
 
 typedef int startDay;
 
-@property (nonatomic) startDay calendarStartDay;
+@property startDay calendarStartDay;
+@property BOOL shouldFillCalendar;
+@property BOOL adaptHeightToNumberOfWeeksInMonth;
 @property (nonatomic, strong) NSLocale *locale;
 @property (nonatomic, strong) NSDate *minimumDate;
 @property (nonatomic, strong) NSDate *maximumDate;
 @property (nonatomic, strong) NSDate *selectedDate;
-@property (nonatomic) BOOL shouldFillCalendar;
-@property (nonatomic) BOOL adaptHeightToNumberOfWeeksInMonth;
 @property (nonatomic, weak) id<CKCalendarDelegate> delegate;
 @property (nonatomic, strong) NSCalendar *calendar;
-@property (nonatomic, retain) NSMutableArray *datesForTable;
-@property (nonatomic, retain) NSMutableArray *startTimesForTable;
-@property (nonatomic, retain) NSMutableArray *endTimesForTable;
-@property (nonatomic, retain) NSMutableDictionary *datesAndHours;
+@property (nonatomic, strong) NSMutableArray *datesForTable;
+@property (nonatomic, strong) NSMutableArray *startTimesForTable;
+@property (nonatomic, strong) NSMutableArray *endTimesForTable;
+@property (nonatomic, strong) NSMutableDictionary *datesAndHours;
 @property (nonatomic, strong) UIColor *dateTextColor;
 @property (nonatomic, strong) UIColor *selectedDateTextColor;
 @property (nonatomic, strong) UIColor *selectedDateBackgroundColor;
@@ -42,8 +42,9 @@ typedef int startDay;
 @property (nonatomic, strong) UIColor *disabledDateTextColor;
 @property (nonatomic, strong) UIColor *disabledDateBackgroundColor;
 
-- (id)initWithStartDay:(startDay)firstDay;
+- (id)initWithStartDay:(startDay)firstDay frame:(CGRect)frame;
 - (id)initWithStartDay:(startDay)firstDay dates:(NSArray *)dates startTimes:(NSArray *)startTimes endTimes:(NSArray *)endTimes frame:(CGRect)frame;
+- (void)setUpTheTodoDates:(NSArray *)todoDates withStartTimes:(NSArray *)startTimes andEndTimes:(NSArray *)endTimes;
 
 - (void)setTitleFont:(UIFont *)font;
 - (UIFont *)titleFont;
@@ -64,7 +65,7 @@ typedef int startDay;
 - (void)setDayOfWeekBottomColor:(UIColor *)bottomColor topColor:(UIColor *)topColor;
 
 - (void)setDateFont:(UIFont *)font;
-- (UIFont *)dateFont;
+//- (UIFont *)dateFont;
 
 - (void)setDateBackgroundColor:(UIColor *)color;
 - (UIColor *)dateBackgroundColor;

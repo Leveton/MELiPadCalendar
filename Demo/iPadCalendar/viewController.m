@@ -1,30 +1,29 @@
-#import "iPadCalendarViewController.h"
+#import "viewController.h"
 #import "MELiPadCalendarView.h"
-#import "SBJson.h"
 
-@interface iPadCalendarViewController ()<CKCalendarDelegate>
+@interface viewController ()<CKCalendarDelegate>
 
 @property (nonatomic, strong) MELiPadCalendarView *calendar;
 @property (nonatomic, strong) NSDate *orientationDate;
 @property (nonatomic, assign) CGRect frameChosen;
+@property (nonatomic, strong) NSMutableArray *theStartHours;
+@property (nonatomic, strong) NSMutableArray *theEndHours;
+@property (nonatomic, strong) NSMutableArray *theTodoDates;
+
 @end
 
-@implementation iPadCalendarViewController
-@synthesize genericCalendar, apiUrl, tableData0, tableData1, theTodoDates, theStartHours, theEndHours, calendar, orientationDate, frameChosen;
+@implementation viewController
+
 
 - (id)init {
     self = [super init];
     
     if (self)
     {
-        self.tableData0 = [[NSMutableArray alloc]init];
-        self.tableData1 = [[NSMutableArray alloc]init];
-        self.theTodoDates = [[NSMutableArray alloc]init];
-        self.theStartHours = [[NSMutableArray alloc]init];
-        self.theEndHours = [[NSMutableArray alloc]init];
+        self.theTodoDates =[NSMutableArray array];
+        self.theStartHours = [NSMutableArray array];
+        self.theEndHours = [NSMutableArray array];
         
-        //hit the dummy API from the JSON file
-        [self getTodoTimeStamps];
     }
     return self;
 }
@@ -33,24 +32,37 @@
 {
     
     [super viewDidLoad];
-    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,20,770,640)];
     
-    calendar.delegate = self;
-    frameChosen = calendar.frame;
+    //self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame:CGRectMake(127,20,770,640)];
     
-    orientationDate = [NSDate date];
+    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:CGRectMake(127, 20, 770, 640)];
+    //.14
+    //.17
+    
+    //hit the dummy API from the JSON file
+    [self getTheDummyJson];
+    
+    if (self.theTodoDates && self.theStartHours && self.theEndHours)
+    {
+       [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
+    }
+    
+    self.calendar.delegate = self;
+    self.frameChosen = self.calendar.frame;
+    
+     self.orientationDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     dateFormatter.dateFormat = @"MM/dd/yyyy";
     
     //highlight the current date, or a range of dates
-    NSString *stringFromDate = [dateFormatter stringFromDate:orientationDate];
-    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    calendar.minimumDate = [dateFormatter dateFromString:@""];
-    calendar.maximumDate = [dateFormatter dateFromString:@""];
-    calendar.shouldFillCalendar = NO;
-    calendar.adaptHeightToNumberOfWeeksInMonth = YES;
+    NSString *stringFromDate = [dateFormatter stringFromDate: self.orientationDate];
+    self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
+    self.calendar.minimumDate = [dateFormatter dateFromString:@""];
+    self.calendar.maximumDate = [dateFormatter dateFromString:@""];
+    self.calendar.shouldFillCalendar = NO;
+    self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
     
-    [self.view addSubview:calendar];
+    [self.view addSubview:self.calendar];
     
     self.view.backgroundColor = BlueColor;
     
@@ -92,14 +104,14 @@
     
     NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
     
-    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
+    self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame: self.frameChosen];
     
-    calendar.delegate = self;
-    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    calendar.shouldFillCalendar = NO;
-    calendar.adaptHeightToNumberOfWeeksInMonth = YES;
+    self.calendar.delegate = self;
+    self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
+    self.calendar.shouldFillCalendar = NO;
+    self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
 
-    [self.view addSubview:calendar];
+    [self.view addSubview:self.calendar];
 }
 
 - (void)transitionToNextMonth
@@ -117,52 +129,54 @@
     
     NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
     
-    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
+    self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame:self.frameChosen];
     
-    calendar.delegate = self;
-    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    calendar.shouldFillCalendar = NO;
-    calendar.adaptHeightToNumberOfWeeksInMonth = YES;
+    self.calendar.delegate = self;
+    self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
+    self.calendar.shouldFillCalendar = NO;
+    self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
     
-    [self.view addSubview:calendar];
+    [self.view addSubview:self.calendar];
 }
 
 #pragma mark - dummy API call
 
--(void)getTodoTimeStamps
+-(void)getTheDummyJson
 {
-    @autoreleasepool
+    
+    NSError *error;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *myFile = [mainBundle pathForResource:@"test" ofType: @"json"];
+    NSString *jsonString = [NSString stringWithContentsOfFile:myFile
+                                                 encoding:NSUTF8StringEncoding
+                                                    error:&error];
+    if (error)
     {
-
-        NSError *error;
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *myFile = [mainBundle pathForResource: @"test" ofType: @"json"];
-        NSString *response=[NSString stringWithContentsOfFile:myFile
-                                                    encoding:NSUTF8StringEncoding
-                                                       error:&error];
-        if (error)
+        NSLog(@"json error %@", error);
+        return;
+    }
+    
+    NSData *dataFromString = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonData = [NSJSONSerialization JSONObjectWithData:dataFromString options:0 error:&error];
+    if (jsonData && [NSJSONSerialization isValidJSONObject:jsonData])
+    {
+        NSArray *body = jsonData[@"Body"];
+        NSMutableArray *startTimes = [NSMutableArray array];
+        NSMutableArray *endTimes = [NSMutableArray array];
+        
+        for (NSDictionary *dict in body)
         {
-            NSLog(@"error %@", error);
+            NSLog(@"end: %@", dict[@"EndTime"]);
+            NSLog(@"start: %@", dict[@"StartTime"]);
+            
+            NSString *startTime = dict[@"StartTime"];
+            NSString *endTime = dict[@"EndTime"];
+            [startTimes addObject:startTime];
+            [endTimes addObject:endTime];
         }
         
-        NSString *validJSON = [self convertResponseIntoValidJSON:response];
-        
-        SBJsonParser* parser = [[SBJsonParser alloc]init];
-        NSDictionary* myDict = [parser objectWithString:validJSON];
-        NSArray *resultsArray = [myDict valueForKey:@"Body"];
-        NSArray *startTime = [resultsArray valueForKey:@"StartTime"];
-        NSArray *endTime = [resultsArray valueForKey:@"EndTime"];
-        
-        for (id object in startTime) {
-            [self.tableData0 addObject:object];
-        }
-        
-        for (id object in endTime) {
-            [self.tableData1 addObject:object];
-        }
-        
-        NSArray *startTimeTimeStamps = [self convertResponsesToTimestamps:tableData0];
-        NSArray *endTimeTimeStamps = [self convertResponsesToTimestamps:tableData1];
+        NSArray *startTimeTimeStamps = [self convertResponsesToTimestamps:startTimes];
+        NSArray *endTimeTimeStamps = [self convertResponsesToTimestamps:endTimes];
         
         NSDateFormatter *_formatter=[[NSDateFormatter alloc]init];
         [_formatter setDateFormat:@"MM/dd/yyyy 'at' hh:mm"];
@@ -173,7 +187,7 @@
             NSTimeInterval _interval=[timeStamp doubleValue];
             NSDate *date = [NSDate dateWithTimeIntervalSince1970:_interval];
             NSString *_date=[_formatter stringFromDate:date];
-            //NSLog(@"startDate: %@", _date);
+            NSLog(@"startDate: %@", _date);
             [self separateStartDateAndHour:_date];
         }
         
@@ -183,38 +197,40 @@
             NSTimeInterval _interval=[timeStamp doubleValue];
             NSDate *date = [NSDate dateWithTimeIntervalSince1970:_interval];
             NSString *_longDate=[_formatter stringFromDate:date];
-            //NSLog(@"endDates %@", _longDate);
+            NSLog(@"endDates %@", _longDate);
             [self separateEndDateAndHour:_longDate];
         }
     }
+    
 }
+
 
 #pragma mark - formatting JSON
 
 - (void)separateStartDateAndHour:(NSString *)longDate
 {
     NSString *justTheDate = [longDate substringToIndex:[longDate length] - 9];
-    [theTodoDates addObject:justTheDate];
+    [self.theTodoDates addObject:justTheDate];
     //NSLog(@"justtheSTARTdate: '%@'", theTodoDates);
     
     NSRange range = [longDate rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, 11)];
     NSString *hourStart = [longDate substringFromIndex:range.location+4];
-    [theStartHours addObject:hourStart];
+    [self.theStartHours addObject:hourStart];
     //NSLog(@"the START Hour: '%@'", theStartHours);
 }
 
 - (void)separateEndDateAndHour:(NSString *)longDate
 {
-    NSString *justTheDate = [longDate substringToIndex:[longDate length] - 9];
+    //NSString *justTheDate = [longDate substringToIndex:[longDate length] - 9];
     //NSLog(@"theEndDate: '%@'", justTheDate);
     
     NSRange range = [longDate rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, 11)];
     NSString *hourStart = [longDate substringFromIndex:range.location+4];
-    [theEndHours addObject:hourStart];
+    [self.theEndHours addObject:hourStart];
     //NSLog(@"the END Hour: '%@'", theEndHours);
 }
 
--(NSString *)convertResponseIntoValidJSON:(NSString *)responseString
+- (NSString *)convertResponseIntoValidJSON:(NSString *)responseString
 {
     responseString=[responseString stringByReplacingOccurrencesOfString:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                                                              withString:@""];

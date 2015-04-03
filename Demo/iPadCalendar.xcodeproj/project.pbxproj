@@ -17,15 +17,9 @@
 		25C0CD5116B3577400A94E61 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C0CD5016B3577400A94E61 /* Default.png */; };
 		25C0CD5316B3577400A94E61 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C0CD5216B3577400A94E61 /* Default@2x.png */; };
 		25C0CD5516B3577400A94E61 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C0CD5416B3577400A94E61 /* Default-568h@2x.png */; };
-		25C0CD5816B3577400A94E61 /* iPadCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25C0CD5716B3577400A94E61 /* iPadCalendarViewController.m */; };
+		25C0CD5816B3577400A94E61 /* viewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25C0CD5716B3577400A94E61 /* viewController.m */; };
 		25C0CD6516B3688600A94E61 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C0CD6416B3688600A94E61 /* EventKit.framework */; };
 		25C0CD6716B3688C00A94E61 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25C0CD6616B3688C00A94E61 /* QuartzCore.framework */; };
-		25D565A716B4A6A600815EE1 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D5659C16B4A6A600815EE1 /* SBJsonParser.m */; };
-		25D565A816B4A6A600815EE1 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D5659E16B4A6A600815EE1 /* SBJsonStreamParser.m */; };
-		25D565A916B4A6A600815EE1 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D565A016B4A6A600815EE1 /* SBJsonStreamParserAccumulator.m */; };
-		25D565AA16B4A6A600815EE1 /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D565A216B4A6A600815EE1 /* SBJsonStreamParserAdapter.m */; };
-		25D565AB16B4A6A600815EE1 /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D565A416B4A6A600815EE1 /* SBJsonStreamParserState.m */; };
-		25D565AC16B4A6A600815EE1 /* SBJsonStreamTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D565A616B4A6A600815EE1 /* SBJsonStreamTokeniser.m */; };
 		7A27B71B17AC159800D7C98B /* DateTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A27B71317AC159800D7C98B /* DateTable.m */; };
 		7A27B72317AC25B500D7C98B /* MELiPadCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A27B72217AC25B400D7C98B /* MELiPadCalendarView.m */; };
 		7A7332E71AC6329400FCEC6B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A7332E61AC6329400FCEC6B /* Images.xcassets */; };
@@ -46,23 +40,10 @@
 		25C0CD5016B3577400A94E61 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		25C0CD5216B3577400A94E61 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		25C0CD5416B3577400A94E61 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		25C0CD5616B3577400A94E61 /* iPadCalendarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iPadCalendarViewController.h; sourceTree = "<group>"; };
-		25C0CD5716B3577400A94E61 /* iPadCalendarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iPadCalendarViewController.m; sourceTree = "<group>"; };
+		25C0CD5616B3577400A94E61 /* viewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = viewController.h; sourceTree = "<group>"; };
+		25C0CD5716B3577400A94E61 /* viewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = viewController.m; sourceTree = "<group>"; };
 		25C0CD6416B3688600A94E61 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		25C0CD6616B3688C00A94E61 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		25D5659A16B4A6A600815EE1 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
-		25D5659B16B4A6A600815EE1 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
-		25D5659C16B4A6A600815EE1 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
-		25D5659D16B4A6A600815EE1 /* SBJsonStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParser.h; sourceTree = "<group>"; };
-		25D5659E16B4A6A600815EE1 /* SBJsonStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParser.m; sourceTree = "<group>"; };
-		25D5659F16B4A6A600815EE1 /* SBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAccumulator.h; sourceTree = "<group>"; };
-		25D565A016B4A6A600815EE1 /* SBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAccumulator.m; sourceTree = "<group>"; };
-		25D565A116B4A6A600815EE1 /* SBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAdapter.h; sourceTree = "<group>"; };
-		25D565A216B4A6A600815EE1 /* SBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAdapter.m; sourceTree = "<group>"; };
-		25D565A316B4A6A600815EE1 /* SBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserState.h; sourceTree = "<group>"; };
-		25D565A416B4A6A600815EE1 /* SBJsonStreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserState.m; sourceTree = "<group>"; };
-		25D565A516B4A6A600815EE1 /* SBJsonStreamTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamTokeniser.h; sourceTree = "<group>"; };
-		25D565A616B4A6A600815EE1 /* SBJsonStreamTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamTokeniser.m; sourceTree = "<group>"; };
 		7A27B71217AC159800D7C98B /* DateTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTable.h; sourceTree = "<group>"; };
 		7A27B71317AC159800D7C98B /* DateTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTable.m; sourceTree = "<group>"; };
 		7A27B72117AC25B400D7C98B /* MELiPadCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MELiPadCalendarView.h; sourceTree = "<group>"; };
@@ -127,11 +108,11 @@
 		25C0CD4416B3577400A94E61 /* iPadCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				25C0CD5616B3577400A94E61 /* iPadCalendarViewController.h */,
-				25C0CD5716B3577400A94E61 /* iPadCalendarViewController.m */,
+				25C0CD5616B3577400A94E61 /* viewController.h */,
+				25C0CD5716B3577400A94E61 /* viewController.m */,
 				7A27B71017AC159800D7C98B /* MELiPadCalendar */,
 				258E53B016EBBE2F00CFE103 /* delegate */,
-				25D5659816B4A68100815EE1 /* JSON */,
+				25D5659816B4A68100815EE1 /* test JSON */,
 				7A7332E61AC6329400FCEC6B /* Images.xcassets */,
 				25C0CD4516B3577400A94E61 /* Supporting Files */,
 			);
@@ -152,25 +133,12 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		25D5659816B4A68100815EE1 /* JSON */ = {
+		25D5659816B4A68100815EE1 /* test JSON */ = {
 			isa = PBXGroup;
 			children = (
 				258DA7081719F6D600C92C20 /* test.json */,
-				25D5659A16B4A6A600815EE1 /* SBJson.h */,
-				25D5659B16B4A6A600815EE1 /* SBJsonParser.h */,
-				25D5659C16B4A6A600815EE1 /* SBJsonParser.m */,
-				25D5659D16B4A6A600815EE1 /* SBJsonStreamParser.h */,
-				25D5659E16B4A6A600815EE1 /* SBJsonStreamParser.m */,
-				25D5659F16B4A6A600815EE1 /* SBJsonStreamParserAccumulator.h */,
-				25D565A016B4A6A600815EE1 /* SBJsonStreamParserAccumulator.m */,
-				25D565A116B4A6A600815EE1 /* SBJsonStreamParserAdapter.h */,
-				25D565A216B4A6A600815EE1 /* SBJsonStreamParserAdapter.m */,
-				25D565A316B4A6A600815EE1 /* SBJsonStreamParserState.h */,
-				25D565A416B4A6A600815EE1 /* SBJsonStreamParserState.m */,
-				25D565A516B4A6A600815EE1 /* SBJsonStreamTokeniser.h */,
-				25D565A616B4A6A600815EE1 /* SBJsonStreamTokeniser.m */,
 			);
-			name = JSON;
+			name = "test JSON";
 			sourceTree = "<group>";
 		};
 		7A27B71017AC159800D7C98B /* MELiPadCalendar */ = {
@@ -262,13 +230,7 @@
 			files = (
 				25C0CD4B16B3577400A94E61 /* main.m in Sources */,
 				25C0CD4F16B3577400A94E61 /* iPadCalendarAppDelegate.m in Sources */,
-				25C0CD5816B3577400A94E61 /* iPadCalendarViewController.m in Sources */,
-				25D565A716B4A6A600815EE1 /* SBJsonParser.m in Sources */,
-				25D565A816B4A6A600815EE1 /* SBJsonStreamParser.m in Sources */,
-				25D565A916B4A6A600815EE1 /* SBJsonStreamParserAccumulator.m in Sources */,
-				25D565AA16B4A6A600815EE1 /* SBJsonStreamParserAdapter.m in Sources */,
-				25D565AB16B4A6A600815EE1 /* SBJsonStreamParserState.m in Sources */,
-				25D565AC16B4A6A600815EE1 /* SBJsonStreamTokeniser.m in Sources */,
+				25C0CD5816B3577400A94E61 /* viewController.m in Sources */,
 				7A27B71B17AC159800D7C98B /* DateTable.m in Sources */,
 				7A27B72317AC25B500D7C98B /* MELiPadCalendarView.m in Sources */,
 			);

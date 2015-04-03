@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@class iPadCalendarViewController;
+#import "viewController.h"
 
 @interface iPadCalendarAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) iPadCalendarViewController *viewController;
+@property (strong, nonatomic) viewController *viewController;
 
 @end
