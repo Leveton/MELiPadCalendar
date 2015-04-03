@@ -5,10 +5,10 @@
 
 @property (nonatomic, strong) MELiPadCalendarView *calendar;
 @property (nonatomic, strong) NSDate *orientationDate;
-@property (nonatomic, assign) CGRect frameChosen;
 @property (nonatomic, strong) NSMutableArray *theStartHours;
 @property (nonatomic, strong) NSMutableArray *theEndHours;
 @property (nonatomic, strong) NSMutableArray *theTodoDates;
+@property CGRect frameChosen;
 
 @end
 
@@ -33,28 +33,26 @@
     
     [super viewDidLoad];
     
-    //self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame:CGRectMake(127,20,770,640)];
-    
-    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:CGRectMake(127, 20, 770, 640)];
-    //.14
-    //.17
-    
     //hit the dummy API from the JSON file
     [self getTheDummyJson];
     
-    if (self.theTodoDates && self.theStartHours && self.theEndHours)
-    {
-       [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
-    }
+    //self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame:CGRectMake(127,20,770,640)];
+    NSAssert(self.theTodoDates, NSLocalizedString(@"Yo, there ain't no dates", nil));
+    NSAssert(self.theStartHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
+    NSAssert(self.theEndHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
+    
+    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:CGRectMake(127, 20, 385, 320)];
+    
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
     
     self.calendar.delegate = self;
     self.frameChosen = self.calendar.frame;
     
-     self.orientationDate = [NSDate date];
+    self.orientationDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     dateFormatter.dateFormat = @"MM/dd/yyyy";
     
-    //highlight the current date, or a range of dates
+    /*highlight the current date, or a range of dates*/
     NSString *stringFromDate = [dateFormatter stringFromDate: self.orientationDate];
     self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
     self.calendar.minimumDate = [dateFormatter dateFromString:@""];
@@ -65,7 +63,6 @@
     [self.view addSubview:self.calendar];
     
     self.view.backgroundColor = BlueColor;
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,6 +90,7 @@
 - (void)transitionToPreviousMonth
 {
     [self.calendar removeFromSuperview];
+    self.calendar = nil;
     
     NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents* comps = [[NSDateComponents alloc] init];
@@ -104,13 +102,16 @@
     
     NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
     
-    self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame: self.frameChosen];
+    //self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame: self.frameChosen];
+    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:self.frameChosen];
+    
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
     
     self.calendar.delegate = self;
     self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
     self.calendar.shouldFillCalendar = NO;
     self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
-
+    
     [self.view addSubview:self.calendar];
 }
 
@@ -118,6 +119,7 @@
 {
     
     [self.calendar removeFromSuperview];
+    self.calendar = nil;
     
     NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents* comps = [[NSDateComponents alloc] init];
@@ -129,7 +131,9 @@
     
     NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
     
-    self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame:self.frameChosen];
+    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:self.frameChosen];
+    
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
     
     self.calendar.delegate = self;
     self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
@@ -148,8 +152,8 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *myFile = [mainBundle pathForResource:@"test" ofType: @"json"];
     NSString *jsonString = [NSString stringWithContentsOfFile:myFile
-                                                 encoding:NSUTF8StringEncoding
-                                                    error:&error];
+                                                     encoding:NSUTF8StringEncoding
+                                                        error:&error];
     if (error)
     {
         NSLog(@"json error %@", error);
@@ -256,7 +260,7 @@
         {
             responseString = [responseString substringToIndex:[responseString length] - 3];
         }
-
+        
         [timeStampArry addObject:responseString];
         
     }

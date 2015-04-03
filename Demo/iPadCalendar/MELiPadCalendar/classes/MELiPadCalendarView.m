@@ -2,13 +2,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MELiPadCalendarView.h"
 
-#define BUTTON_MARGIN 4
-#define CALENDAR_MARGIN 3
-#define TOP_HEIGHT 44
-#define DAYS_HEADER_HEIGHT 22
-#define DEFAULT_CELL_WIDTH 43
-#define CELL_BORDER_WIDTH 1
-
 @interface MELiPadCalendarView ()
 
 @property (nonatomic, strong) UIView *highlight;
@@ -22,6 +15,11 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @property (nonatomic, strong) NSDate *monthShowing;
 @property CGFloat cellWidth;
+@property CGFloat buttonMargin;
+@property CGFloat calendarMargin;
+@property CGFloat topHeight;
+@property CGFloat daysHeaderHeight;
+@property CGFloat cellBorderWidth;
 @property CGFloat dateTableViewWidth;
 @property CGFloat dateTableViewHeight;
 
@@ -45,10 +43,16 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        self.dateTableViewWidth = frame.size.width * .141;
-        self.dateTableViewHeight = frame.size.height * .171;
-        NSLog(@"width: %f", self.dateTableViewWidth);
-        NSLog(@"height: %f", self.dateTableViewHeight);
+        _dateTableViewWidth = frame.size.width * .141;
+        _dateTableViewHeight = frame.size.height * .171;
+        _cellWidth = frame.size.width * .0558;
+        _buttonMargin = frame.size.width * .0052;
+        _calendarMargin = frame.size.width * .0039;
+        _cellBorderWidth = frame.size.width * .0013;
+        _topHeight = frame.size.height * .0688;
+        _daysHeaderHeight = frame.size.height * .0344;
+        NSLog(@"width: %f", _dateTableViewWidth);
+        NSLog(@"height: %f", _dateTableViewHeight);
         [self internalInit:firstDay];
     }
     return self;
@@ -58,8 +62,6 @@
 {
     _calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     [_calendar setLocale:[NSLocale currentLocale]];
-    
-    _cellWidth = DEFAULT_CELL_WIDTH;
     
     //    _dateFormatter = [[NSDateFormatter alloc] init];
     //    [_dateFormatter setTimeStyle:NSDateFormatterNoStyle];
@@ -117,7 +119,7 @@
     
     NSMutableArray *labels = [NSMutableArray array];
     
-    for (int i = 0; i < 7; ++i)
+    for (NSInteger i = 0; i < 7; ++i)
     {
         UILabel *dayOfWeekLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         dayOfWeekLabel.textAlignment = NSTextAlignmentCenter;
@@ -144,17 +146,17 @@
         _dateButtonArray = [NSMutableArray array];
     }
     
+    /* five rows of seven days equals 42 */
     for (NSUInteger i = 1; i <= 42; i++)
     {
         
-        DateTable *dateTable = [[DateTable alloc]initWithFrame:CGRectMake(0, 0, self.dateTableViewWidth, self.dateTableViewHeight)];
+        DateTable *dateTable = [[DateTable alloc]initWithFrame:CGRectMake(0, 0, _dateTableViewWidth, _dateTableViewHeight)];
         [dateTable setDelegate:dateTable.self];
         [dateTable setDataSource:dateTable.self];
         dateTable.arrayOfDates = todoDates;
         dateTable.arrayOfStartTimes = startTimes;
         dateTable.arrayOfEndTimes = endTimes;
         dateTable.calendar = _calendar;
-        //[dateTable setUpTableHeight];
         [_dateButtonArray addObject:dateTable];
     }
     
@@ -187,34 +189,39 @@
 {
     [super layoutSubviews];
     
-    CGFloat containerWidth = self.bounds.size.width - (CALENDAR_MARGIN * 2);
-    _cellWidth = (containerWidth / 7.0) - CELL_BORDER_WIDTH;
+    CGFloat width = self.bounds.size.width;
+    CGFloat height = self.bounds.size.height;
+    NSLog(@"anObject: %f", width);
+    NSLog(@"anObject: %f", height);
+    
+    CGFloat containerWidth = width - (_calendarMargin * 2);
+    _cellWidth = (containerWidth / 7.0) - _cellBorderWidth;
     
     NSInteger numberOfWeeksToShow = 6;
     if (_adaptHeightToNumberOfWeeksInMonth)
     {
         numberOfWeeksToShow = [self numberOfWeeksInMonthContainingDate:_monthShowing];
     }
-    CGFloat containerHeight = (numberOfWeeksToShow * (_cellWidth + CELL_BORDER_WIDTH) + DAYS_HEADER_HEIGHT);
+    CGFloat containerHeight = (numberOfWeeksToShow * (_cellWidth + _cellBorderWidth) + _daysHeaderHeight);
     
     CGRect newFrame = self.frame;
-    newFrame.size.height = containerHeight + CALENDAR_MARGIN + TOP_HEIGHT;
+    newFrame.size.height = containerHeight + _calendarMargin + _topHeight;
     self.frame = newFrame;
     
-    _highlight.frame = CGRectMake(1, 1, self.bounds.size.width - 2, 1);
+    _highlight.frame = CGRectMake(1, 1, width - 2, 1);
     
     _titleLabel.text = [_dateFormatter stringFromDate:_monthShowing];
-    _titleLabel.frame = CGRectMake(0, 0, self.bounds.size.width, TOP_HEIGHT);
-    _prevButton.frame = CGRectMake(BUTTON_MARGIN, BUTTON_MARGIN, 48, 38);
-    _nextButton.frame = CGRectMake(self.bounds.size.width - 48 - BUTTON_MARGIN, BUTTON_MARGIN, 48, 38);
+    _titleLabel.frame = CGRectMake(0, 0, width, _topHeight);
+    _prevButton.frame = CGRectMake(_buttonMargin, _buttonMargin, self.frame.size.width*.0623, self.frame.size.height*.0594);
+    _nextButton.frame = CGRectMake(width - self.frame.size.width*.0623 - _buttonMargin, _buttonMargin, self.frame.size.width*.0623, self.frame.size.height*.0594);
     
-    _calendarContainer.frame = CGRectMake(CALENDAR_MARGIN, CGRectGetMaxY(_titleLabel.frame), containerWidth, containerHeight);
-    _daysHeader.frame = CGRectMake(0, 0, _calendarContainer.frame.size.width, DAYS_HEADER_HEIGHT);
+    _calendarContainer.frame = CGRectMake(_calendarMargin, CGRectGetMaxY(_titleLabel.frame), containerWidth, containerHeight);
+    _daysHeader.frame = CGRectMake(0, 0, _calendarContainer.frame.size.width, _daysHeaderHeight);
     
     CGRect lastDayFrame = CGRectZero;
     for (UILabel *dayLabel in _dayOfWeekLabels)
     {
-        dayLabel.frame = CGRectMake(CGRectGetMaxX(lastDayFrame) + CELL_BORDER_WIDTH, lastDayFrame.origin.y, _cellWidth, _daysHeader.frame.size.height);
+        dayLabel.frame = CGRectMake(CGRectGetMaxX(lastDayFrame) + _cellBorderWidth, lastDayFrame.origin.y, _cellWidth, _daysHeader.frame.size.height);
         lastDayFrame = dayLabel.frame;
     }
     
@@ -387,7 +394,7 @@
     
     NSInteger placeInWeek = [self placeInWeekForDate:date];
     
-    return CGRectMake(placeInWeek * (_cellWidth + CELL_BORDER_WIDTH), (row * (_cellWidth + CELL_BORDER_WIDTH)) + CGRectGetMaxY(_daysHeader.frame) + CELL_BORDER_WIDTH, _cellWidth, _cellWidth);
+    return CGRectMake(placeInWeek * (_cellWidth + _cellBorderWidth), (row * (_cellWidth + _cellBorderWidth)) + CGRectGetMaxY(_daysHeader.frame) + _cellBorderWidth, _cellWidth, _cellWidth);
 }
 
 - (void)moveCalendarToNextMonth
