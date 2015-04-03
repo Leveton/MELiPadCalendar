@@ -27,11 +27,8 @@
 		25D565AB16B4A6A600815EE1 /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D565A416B4A6A600815EE1 /* SBJsonStreamParserState.m */; };
 		25D565AC16B4A6A600815EE1 /* SBJsonStreamTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 25D565A616B4A6A600815EE1 /* SBJsonStreamTokeniser.m */; };
 		7A27B71B17AC159800D7C98B /* DateTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A27B71317AC159800D7C98B /* DateTable.m */; };
-		7A27B71D17AC159800D7C98B /* left_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A27B71717AC159800D7C98B /* left_arrow.png */; };
-		7A27B71E17AC159800D7C98B /* left_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A27B71817AC159800D7C98B /* left_arrow@2x.png */; };
-		7A27B71F17AC159800D7C98B /* right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A27B71917AC159800D7C98B /* right_arrow.png */; };
-		7A27B72017AC159800D7C98B /* right_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A27B71A17AC159800D7C98B /* right_arrow@2x.png */; };
 		7A27B72317AC25B500D7C98B /* MELiPadCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A27B72217AC25B400D7C98B /* MELiPadCalendarView.m */; };
+		7A7332E71AC6329400FCEC6B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A7332E61AC6329400FCEC6B /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,12 +65,9 @@
 		25D565A616B4A6A600815EE1 /* SBJsonStreamTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamTokeniser.m; sourceTree = "<group>"; };
 		7A27B71217AC159800D7C98B /* DateTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateTable.h; sourceTree = "<group>"; };
 		7A27B71317AC159800D7C98B /* DateTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateTable.m; sourceTree = "<group>"; };
-		7A27B71717AC159800D7C98B /* left_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = left_arrow.png; sourceTree = "<group>"; };
-		7A27B71817AC159800D7C98B /* left_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left_arrow@2x.png"; sourceTree = "<group>"; };
-		7A27B71917AC159800D7C98B /* right_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right_arrow.png; sourceTree = "<group>"; };
-		7A27B71A17AC159800D7C98B /* right_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "right_arrow@2x.png"; sourceTree = "<group>"; };
 		7A27B72117AC25B400D7C98B /* MELiPadCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MELiPadCalendarView.h; sourceTree = "<group>"; };
 		7A27B72217AC25B400D7C98B /* MELiPadCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MELiPadCalendarView.m; sourceTree = "<group>"; };
+		7A7332E61AC6329400FCEC6B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +132,7 @@
 				7A27B71017AC159800D7C98B /* MELiPadCalendar */,
 				258E53B016EBBE2F00CFE103 /* delegate */,
 				25D5659816B4A68100815EE1 /* JSON */,
+				7A7332E61AC6329400FCEC6B /* Images.xcassets */,
 				25C0CD4516B3577400A94E61 /* Supporting Files */,
 			);
 			path = iPadCalendar;
@@ -182,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				7A27B71117AC159800D7C98B /* classes */,
-				7A27B71617AC159800D7C98B /* support files */,
 			);
 			path = MELiPadCalendar;
 			sourceTree = "<group>";
@@ -196,17 +190,6 @@
 				7A27B71317AC159800D7C98B /* DateTable.m */,
 			);
 			path = classes;
-			sourceTree = "<group>";
-		};
-		7A27B71617AC159800D7C98B /* support files */ = {
-			isa = PBXGroup;
-			children = (
-				7A27B71717AC159800D7C98B /* left_arrow.png */,
-				7A27B71817AC159800D7C98B /* left_arrow@2x.png */,
-				7A27B71917AC159800D7C98B /* right_arrow.png */,
-				7A27B71A17AC159800D7C98B /* right_arrow@2x.png */,
-			);
-			path = "support files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,14 +245,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				25C0CD4916B3577400A94E61 /* InfoPlist.strings in Resources */,
+				7A7332E71AC6329400FCEC6B /* Images.xcassets in Resources */,
 				25C0CD5116B3577400A94E61 /* Default.png in Resources */,
 				25C0CD5316B3577400A94E61 /* Default@2x.png in Resources */,
 				25C0CD5516B3577400A94E61 /* Default-568h@2x.png in Resources */,
 				258DA7091719F6D600C92C20 /* test.json in Resources */,
-				7A27B71D17AC159800D7C98B /* left_arrow.png in Resources */,
-				7A27B71E17AC159800D7C98B /* left_arrow@2x.png in Resources */,
-				7A27B71F17AC159800D7C98B /* right_arrow.png in Resources */,
-				7A27B72017AC159800D7C98B /* right_arrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +342,8 @@
 		25C0CD5F16B3577500A94E61 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iPadCalendar/iPadCalendar-Prefix.pch";
 				INFOPLIST_FILE = "iPadCalendar/iPadCalendar-Info.plist";
@@ -373,6 +355,8 @@
 		25C0CD6016B3577500A94E61 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iPadCalendar/iPadCalendar-Prefix.pch";
 				INFOPLIST_FILE = "iPadCalendar/iPadCalendar-Info.plist";

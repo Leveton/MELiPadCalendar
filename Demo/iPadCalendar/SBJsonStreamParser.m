@@ -51,7 +51,7 @@
 @synthesize state;
 @synthesize stateStack;
 
-#pragma mark Housekeeping
+#pragma mark - utilities
 
 - (id)init {
 	self = [super init];
@@ -64,8 +64,6 @@
 	return self;
 }
 
-
-#pragma mark Methods
 
 - (NSString*)tokenName:(sbjson_token_t)token {
 	switch (token) {

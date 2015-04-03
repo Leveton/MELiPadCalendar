@@ -50,7 +50,6 @@
 @synthesize delegate;
 @synthesize levelsToSkip;
 
-#pragma mark Housekeeping
 
 - (id)init {
 	self = [super init];
@@ -64,7 +63,7 @@
 }	
 
 
-#pragma mark Private methods
+#pragma mark - Private methods
 
 - (void)pop {
 	[stack removeLastObject];
@@ -111,7 +110,7 @@
 }
 
 
-#pragma mark Delegate methods
+#pragma mark - Delegate methods
 
 - (void)parserFoundObjectStart:(SBJsonStreamParser*)parser {
 	if (++depth > self.levelsToSkip) {

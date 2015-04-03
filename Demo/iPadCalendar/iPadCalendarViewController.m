@@ -2,7 +2,7 @@
 #import "MELiPadCalendarView.h"
 #import "SBJson.h"
 
-@interface iPadCalendarViewController () 
+@interface iPadCalendarViewController ()<CKCalendarDelegate>
 
 @property (nonatomic, strong) MELiPadCalendarView *calendar;
 @property (nonatomic, strong) NSDate *orientationDate;
@@ -14,6 +14,7 @@
 
 - (id)init {
     self = [super init];
+    
     if (self)
     {
         self.tableData0 = [[NSMutableArray alloc]init];
@@ -70,7 +71,7 @@
 //    return _dateFormatter;
 //}
 
-#pragma delegates
+#pragma mark - delegates
 
 - (void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date
 {
@@ -126,7 +127,7 @@
     [self.view addSubview:calendar];
 }
 
-#pragma mark dummy API call
+#pragma mark - dummy API call
 
 -(void)getTodoTimeStamps
 {
@@ -188,7 +189,7 @@
     }
 }
 
-#pragma formatting JSON
+#pragma mark - formatting JSON
 
 - (void)separateStartDateAndHour:(NSString *)longDate
 {
@@ -205,7 +206,7 @@
 - (void)separateEndDateAndHour:(NSString *)longDate
 {
     NSString *justTheDate = [longDate substringToIndex:[longDate length] - 9];
-    NSLog(@"theEndDate: '%@'", justTheDate);
+    //NSLog(@"theEndDate: '%@'", justTheDate);
     
     NSRange range = [longDate rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, 11)];
     NSString *hourStart = [longDate substringFromIndex:range.location+4];

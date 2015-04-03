@@ -49,7 +49,7 @@
 }
 
 
-#pragma mark Methods
+#pragma mark - Methods
 
 - (id)objectWithData:(NSData *)data {
 

@@ -59,7 +59,8 @@
 @synthesize adaptHeightToNumberOfWeeksInMonth = _adaptHeightToNumberOfWeeksInMonth;
 
 
-- (id)init {
+- (id)init
+{
     return [self initWithStartDay:startSunday];
 }
 
@@ -102,14 +103,14 @@
     self.titleLabel = titleLabel;
     
     UIButton *prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [prevButton setImage:[UIImage imageNamed:@"left_arrow.png"] forState:UIControlStateNormal];
+    [prevButton setImage:[UIImage imageNamed:@"left_arrow"] forState:UIControlStateNormal];
     prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [prevButton addTarget:self action:@selector(moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:prevButton];
     self.prevButton = prevButton;
     
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nextButton setImage:[UIImage imageNamed:@"right_arrow.png"] forState:UIControlStateNormal];
+    [nextButton setImage:[UIImage imageNamed:@"right_arrow"] forState:UIControlStateNormal];
     nextButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [nextButton addTarget:self action:@selector(moveCalendarToNextMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:nextButton];
@@ -386,7 +387,7 @@
 }
 
 //- (void)dateButtonPressed:(id)sender {
-//    DateButton *dateButton = sender;
+//    _dateButtons *dateButton = sender;
 //    NSDate *date = dateButton.date;
 //    if (self.minimumDate && [date compare:self.minimumDate] == NSOrderedAscending) {
 //        return;
@@ -416,8 +417,8 @@
 
 - (void)setButtonColor:(UIColor *)color
 {
-    [self.prevButton setImage:[MELiPadCalendarView imageNamed:@"left_arrow.png" withColor:color] forState:UIControlStateNormal];
-    [self.nextButton setImage:[MELiPadCalendarView imageNamed:@"right_arrow.png" withColor:color] forState:UIControlStateNormal];
+    [self.prevButton setImage:[MELiPadCalendarView imageNamed:@"left_arrow" withColor:color] forState:UIControlStateNormal];
+    [self.nextButton setImage:[MELiPadCalendarView imageNamed:@"right_arrow" withColor:color] forState:UIControlStateNormal];
 }
 
 - (void)setInnerBorderColor:(UIColor *)color {
