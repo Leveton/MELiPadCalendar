@@ -9,7 +9,7 @@
 #import "DateTable.h"
 
 
-@interface DateTable ()
+@interface DateTable () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
@@ -21,11 +21,7 @@
     if (self != nil)
     {
          _tableViewHeight = frame.size.height;
-//        CGFloat xOffset = frame.origin.x;
-//        CGFloat yOffset = frame.origin.y;
-//        CGFloat width =  frame.size.width;
-//        CGFloat height = frame.size.height;
-//        NSLog(@"x: %f y: %f width: %f height %f", xOffset, yOffset, width, height);
+         self.tableFooterView = [UIView new];
 
     }
     return self;
@@ -34,14 +30,20 @@
 - (void)setDate:(NSDate *)date
 {
     self.dateTotal = 0;
-    self.dataForTable = [NSMutableArray array];
+    self.tableDataArray = [NSMutableArray array];
     self.startTimesAndEndTimes = [NSMutableArray array];
     NSString *dash = @" - ";
     _date = date;
     NSDateComponents *comps = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:date];
         
-    [self.dataForTable addObject:[NSString stringWithFormat:@"%d", comps.day]];
-
+    [self.tableDataArray addObject:[NSString stringWithFormat:@"%ld", (long)comps.day]];
+    
+    if (self.dateTotal != 0)
+    {
+        NSString *numOfDates = [NSString stringWithFormat:@"Todos: %ld", (long)self.dateTotal];
+        [self.tableDataArray addObject:numOfDates];
+    }
+    
     NSString *dateString = [self.formatter stringFromDate:date];
     
     NSUInteger datesTotal = [self.arrayOfDates count];
@@ -50,20 +52,14 @@
     {
         if ([[self.arrayOfDates objectAtIndex:i] isEqualToString:dateString])
         {
-            //call method to concatinate times here
+            
             [self.startTimesAndEndTimes addObject:[[self.arrayOfStartTimes objectAtIndex:i] stringByAppendingString:[dash stringByAppendingString:[self.arrayOfEndTimes objectAtIndex:i]]]];
+            
+            [self.tableDataArray addObject:[self.arrayOfHeaders objectAtIndex:i]];
             
                 self.dateTotal++;
         }
     }
-
-    
-    if (self.dateTotal != 0)
-    {
-        NSString *numOfDates = [NSString stringWithFormat:@"Todos: %d", self.dateTotal];
-        [self.dataForTable addObject:numOfDates];
-    }
-    [self.dataForTable addObjectsFromArray:self.startTimesAndEndTimes];
         
 }
 
@@ -84,33 +80,42 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.dataForTable count];
+    
+    return [self.tableDataArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier1 = @"Cell";
-    UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
-    if (cell1 == nil) {
-        cell1 = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier1];
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    NSString *cellData = [self.dataForTable objectAtIndex:indexPath.row];
-    cell1.textLabel.text = cellData;
-    
-    if (indexPath.row == 0)
+    if (self.tableDataArray.count > indexPath.row)
     {
-        cell1.textLabel.textColor = BlueColorMinus3;
-        UIFont *myFont = [ UIFont fontWithName: @"Georgia-Bold" size: (_tableViewHeight/9.8f)];
-        cell1.textLabel.font = myFont;
-        return cell1;
+        NSString *cellData = [self.tableDataArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = cellData;
     }
     else
     {
-        cell1.textLabel.textColor = [UIColor redColor];
+        cell.textLabel.text = @"";
+    }
+    
+    if (indexPath.row == 0)
+    {
+        cell.textLabel.textColor = BlueColorMinus3;
+        UIFont *myFont = [ UIFont fontWithName: @"Georgia-Bold" size: (_tableViewHeight/9.8f)];
+        cell.textLabel.font = myFont;
+        return cell;
+    }
+    else
+    {
+        cell.textLabel.textColor = [UIColor redColor];
         UIFont *myFont = [ UIFont fontWithName: @"Arial" size: (_tableViewHeight/9.8f)];
-        cell1.textLabel.font = myFont;
-        return cell1;
+        cell.textLabel.font = myFont;
+        return cell;
 
     }
 }
@@ -135,12 +140,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Date %ld", (long)indexPath.row);
+    NSLog(@"didSelectRowAtIndexPath %ld", (long)indexPath.row);
 }
 
--(void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date
-{
-    NSLog(@"Date %@", date);
-}
 
 @end

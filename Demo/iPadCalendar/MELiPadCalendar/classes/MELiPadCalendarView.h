@@ -1,14 +1,14 @@
-#import "DateTable.h"
 
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+//#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define BlueColor [UIColor colorWithRed:(58.0/255.0) green:(66.0/255) blue:(77.0/255) alpha:1.0]
 #define BlueColorMinus1 [UIColor colorWithRed:(42.0/255.0) green:(54.0/255) blue:(62.0/255) alpha:1.0]
 #define BlueColorMinus2 [UIColor colorWithRed:(36.0/255.0) green:(41.0/255) blue:(48.0/255) alpha:1.0]
-#define BlueColorMinus3 [UIColor colorWithRed:(25.0/255.0) green:(29.0/255) blue:(33.0/255) alpha:1.0]
+#define BlueColorMinus3 [UIColor colorWithRed:255.0/255.0 green:29.0/255 blue:33.0/255 alpha:1.0]
 #define lightBlueDateColor [UIColor colorWithRed:(196.0/255.0) green:(226.0/255) blue:(255.0/255) alpha:1.0]
 #define f5f5f5 [UIColor colorWithRed:(245.0/255.0) green:(245.0/255) blue:(245.0/255) alpha:1.0]
 
-@protocol CKCalendarDelegate;
+@protocol MELiPadCalendarDelegate;
 
 @interface MELiPadCalendarView : UIView
 
@@ -27,11 +27,10 @@ typedef int startDay;
 @property (nonatomic, strong) NSDate *minimumDate;
 @property (nonatomic, strong) NSDate *maximumDate;
 @property (nonatomic, strong) NSDate *selectedDate;
-@property (nonatomic, weak) id<CKCalendarDelegate> delegate;
+@property (nonatomic, weak) id<MELiPadCalendarDelegate> delegate;
 @property (nonatomic, strong) NSCalendar *calendar;
-@property (nonatomic, strong) NSMutableArray *datesForTable;
-@property (nonatomic, strong) NSMutableArray *startTimesForTable;
-@property (nonatomic, strong) NSMutableArray *endTimesForTable;
+@property (nonatomic, strong) NSDateComponents *dateComponents;
+@property (nonatomic, strong) NSDate *orientationDate;
 @property (nonatomic, strong) NSMutableDictionary *datesAndHours;
 @property (nonatomic, strong) UIColor *dateTextColor;
 @property (nonatomic, strong) UIColor *selectedDateTextColor;
@@ -43,29 +42,14 @@ typedef int startDay;
 @property (nonatomic, strong) UIColor *disabledDateBackgroundColor;
 
 - (id)initWithStartDay:(startDay)firstDay frame:(CGRect)frame;
-- (id)initWithStartDay:(startDay)firstDay dates:(NSArray *)dates startTimes:(NSArray *)startTimes endTimes:(NSArray *)endTimes frame:(CGRect)frame;
-- (void)setUpTheTodoDates:(NSArray *)todoDates withStartTimes:(NSArray *)startTimes andEndTimes:(NSArray *)endTimes;
+- (void)setUpTheTodoDates:(NSArray *)todoDates withStartTimes:(NSArray *)startTimes andEndTimes:(NSArray *)endTimes andHeaders:(NSArray *)headers;
 
 - (void)setTitleFont:(UIFont *)font;
 - (UIFont *)titleFont;
 
-- (void)setTitleColor:(UIColor *)color;
-- (UIColor *)titleColor;
-
-- (void)setButtonColor:(UIColor *)color;
-
-- (void)setInnerBorderColor:(UIColor *)color;
-
-- (void)setDayOfWeekFont:(UIFont *)font;
-- (UIFont *)dayOfWeekFont;
-
-- (void)setDayOfWeekTextColor:(UIColor *)color;
-- (UIColor *)dayOfWeekTextColor;
-
 - (void)setDayOfWeekBottomColor:(UIColor *)bottomColor topColor:(UIColor *)topColor;
 
 - (void)setDateFont:(UIFont *)font;
-//- (UIFont *)dateFont;
 
 - (void)setDateBackgroundColor:(UIColor *)color;
 - (UIColor *)dateBackgroundColor;
@@ -73,9 +57,10 @@ typedef int startDay;
 - (void)setDateBorderColor:(UIColor *)color;
 - (UIColor *)dateBorderColor;
 
+
 @end
 
-@protocol CKCalendarDelegate <NSObject>
+@protocol MELiPadCalendarDelegate <NSObject>
 
 - (void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date;
 

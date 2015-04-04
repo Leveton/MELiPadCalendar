@@ -2,7 +2,7 @@
 //  iPadCalendarAppDelegate.h
 //  iPadCalendar
 //
-//  Created by Azam Malik on 1/25/13.
+//  Created by Mike Leveton on 1/25/13.
 //  Copyright (c) 2013 prepcloud. All rights reserved.
 //
 

@@ -1,13 +1,17 @@
 #import "viewController.h"
 #import "MELiPadCalendarView.h"
 
-@interface viewController ()<CKCalendarDelegate>
+@interface viewController ()<MELiPadCalendarDelegate>
 
 @property (nonatomic, strong) MELiPadCalendarView *calendar;
 @property (nonatomic, strong) NSDate *orientationDate;
 @property (nonatomic, strong) NSMutableArray *theStartHours;
 @property (nonatomic, strong) NSMutableArray *theEndHours;
 @property (nonatomic, strong) NSMutableArray *theTodoDates;
+@property (nonatomic, strong) NSMutableArray *theHeaders;
+@property (nonatomic, strong) NSDateFormatter *dateFormatter;
+@property (nonatomic, strong) NSCalendar *calendarForOrientation;
+@property (nonatomic, strong) NSDateComponents *dateComponents;
 @property CGRect frameChosen;
 
 @end
@@ -23,6 +27,7 @@
         self.theTodoDates =[NSMutableArray array];
         self.theStartHours = [NSMutableArray array];
         self.theEndHours = [NSMutableArray array];
+        self.theHeaders = [NSMutableArray array];
         
     }
     return self;
@@ -36,29 +41,24 @@
     //hit the dummy API from the JSON file
     [self getTheDummyJson];
     
-    //self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame:CGRectMake(127,20,770,640)];
     NSAssert(self.theTodoDates, NSLocalizedString(@"Yo, there ain't no dates", nil));
     NSAssert(self.theStartHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
     NSAssert(self.theEndHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
     
-    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:CGRectMake(127, 20, 385, 320)];
+    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:CGRectMake(127, 20, 770, 640)];
     
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
     
     self.calendar.delegate = self;
     self.frameChosen = self.calendar.frame;
     
     self.orientationDate = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    dateFormatter.dateFormat = @"MM/dd/yyyy";
+    self.dateFormatter = [[NSDateFormatter alloc]init];
+    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
     
     /*highlight the current date, or a range of dates*/
-    NSString *stringFromDate = [dateFormatter stringFromDate: self.orientationDate];
-    self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    self.calendar.minimumDate = [dateFormatter dateFromString:@""];
-    self.calendar.maximumDate = [dateFormatter dateFromString:@""];
-    self.calendar.shouldFillCalendar = NO;
-    self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
+    NSString *stringFromDate = [self.dateFormatter stringFromDate: self.orientationDate];
+    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
     
     [self.view addSubview:self.calendar];
     
@@ -70,22 +70,8 @@
     [super didReceiveMemoryWarning];
 }
 
-//- (NSDateFormatter *)dateFormatter
-//{
-//    if (! _dateFormatter)
-//    {
-//        _dateFormatter = [[NSDateFormatter alloc] init];
-//        _dateFormatter.dateFormat = @"MM/dd/yyyy";
-//    }
-//    return _dateFormatter;
-//}
 
-#pragma mark - delegates
-
-- (void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date
-{
-    
-}
+#pragma mark - utilities
 
 - (void)transitionToPreviousMonth
 {
@@ -93,24 +79,19 @@
     self.calendar = nil;
     
     NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents* comps = [[NSDateComponents alloc] init];
-    [comps setMonth:-1];
-    self.orientationDate = [calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    [dateComponents setMonth:-1];
+    self.orientationDate = [calendarForOrientation dateByAddingComponents:dateComponents toDate:self.orientationDate options:0];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    dateFormatter.dateFormat = @"MM/dd/yyyy";
+    self.dateFormatter = [[NSDateFormatter alloc]init];
+    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
     
-    NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
+    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
     
-    //self.calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:self.theTodoDates startTimes:self.theStartHours endTimes:self.theEndHours frame: self.frameChosen];
     self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:self.frameChosen];
-    
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
-    
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
     self.calendar.delegate = self;
-    self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    self.calendar.shouldFillCalendar = NO;
-    self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
+    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
     
     [self.view addSubview:self.calendar];
 }
@@ -122,25 +103,30 @@
     self.calendar = nil;
     
     NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents* comps = [[NSDateComponents alloc] init];
-    [comps setMonth:1];
-    self.orientationDate = [calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    [dateComponents setMonth:1];
+    self.orientationDate = [calendarForOrientation dateByAddingComponents:dateComponents toDate:self.orientationDate options:0];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    dateFormatter.dateFormat = @"MM/dd/yyyy";
+    self.dateFormatter = [[NSDateFormatter alloc]init];
+    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
     
-    NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
+    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
     
     self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:self.frameChosen];
     
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours];
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
     
     self.calendar.delegate = self;
-    self.calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    self.calendar.shouldFillCalendar = NO;
-    self.calendar.adaptHeightToNumberOfWeeksInMonth = YES;
+    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
     
     [self.view addSubview:self.calendar];
+}
+
+#pragma mark - MELiPadDelegate
+
+- (void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date
+{
+    NSLog(@"you've reached didselect date in viewcontroller");
 }
 
 #pragma mark - dummy API call
@@ -170,13 +156,15 @@
         
         for (NSDictionary *dict in body)
         {
-            NSLog(@"end: %@", dict[@"EndTime"]);
-            NSLog(@"start: %@", dict[@"StartTime"]);
+//            NSLog(@"end: %@", dict[@"EndTime"]);
+//            NSLog(@"start: %@", dict[@"StartTime"]);
             
             NSString *startTime = dict[@"StartTime"];
             NSString *endTime = dict[@"EndTime"];
+            NSString *heading = dict[@"Heading"];
             [startTimes addObject:startTime];
             [endTimes addObject:endTime];
+            [self.theHeaders addObject:heading];
         }
         
         NSArray *startTimeTimeStamps = [self convertResponsesToTimestamps:startTimes];
@@ -191,7 +179,7 @@
             NSTimeInterval _interval=[timeStamp doubleValue];
             NSDate *date = [NSDate dateWithTimeIntervalSince1970:_interval];
             NSString *_date=[_formatter stringFromDate:date];
-            NSLog(@"startDate: %@", _date);
+            //NSLog(@"startDate: %@", _date);
             [self separateStartDateAndHour:_date];
         }
         
@@ -201,7 +189,7 @@
             NSTimeInterval _interval=[timeStamp doubleValue];
             NSDate *date = [NSDate dateWithTimeIntervalSince1970:_interval];
             NSString *_longDate=[_formatter stringFromDate:date];
-            NSLog(@"endDates %@", _longDate);
+            //NSLog(@"endDates %@", _longDate);
             [self separateEndDateAndHour:_longDate];
         }
     }
@@ -209,7 +197,7 @@
 }
 
 
-#pragma mark - formatting JSON
+#pragma mark - formatting dummy JSON
 
 - (void)separateStartDateAndHour:(NSString *)longDate
 {

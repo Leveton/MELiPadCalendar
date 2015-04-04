@@ -9,20 +9,33 @@
 #import <UIKit/UIKit.h>
 #import "MELiPadCalendarView.h"
 
+@protocol DateTableDelegate;
 
-@interface DateTable : UITableView <UITableViewDelegate, UITableViewDataSource>
 
+@interface DateTable : UITableView 
+
+@property (nonatomic, weak) id<DateTableDelegate> dateTableDelegate;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSCalendar *calendar;
-@property (nonatomic, strong) NSMutableArray *dataForTable;
+@property (nonatomic, strong) NSMutableArray *tableDataArray;
 @property (nonatomic, strong) NSArray *arrayOfDates;
 @property (nonatomic, strong) NSArray *arrayOfStartTimes;
 @property (nonatomic, strong) NSArray *arrayOfEndTimes;
+@property (nonatomic, strong) NSArray *arrayOfHeaders;
 @property (nonatomic, strong) NSMutableArray *startTimesAndEndTimes;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 @property (nonatomic, strong) NSString *jobForDate;
 @property NSInteger dateTotal;
 @property NSInteger tableViewHeight;
 
+
+@end
+
+@protocol DateTableDelegate <NSObject>
+
+
+@optional
+
+- (void)dateTable:(DateTable *)dateTable didTapRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
