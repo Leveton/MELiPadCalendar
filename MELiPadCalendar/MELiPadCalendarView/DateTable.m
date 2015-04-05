@@ -32,7 +32,6 @@
 
 - (void)setDate:(NSDate *)date
 {
-    self.dateTotal = 0;
     self.tableDataArray = [NSMutableArray array];
     self.startTimesAndEndTimes = [NSMutableArray array];
     NSString *dash = @" - ";
@@ -49,13 +48,6 @@
         [self.tableDataArray addObject:@""];
     }
     
-    
-    if (self.dateTotal != 0)
-    {
-        NSString *numOfDates = [NSString stringWithFormat:@"Todos: %ld", (long)self.dateTotal];
-        [self.tableDataArray addObject:numOfDates];
-    }
-    
     NSString *dateString = [self.formatter stringFromDate:date];
     
     NSUInteger datesTotal = [self.arrayOfDates count];
@@ -69,13 +61,10 @@
             
             [self.tableDataArray addObject:[self.arrayOfHeaders objectAtIndex:i]];
             
-                self.dateTotal++;
         }
     }
-        
 }
 
-//this is so the object only gets initialized once
 - (NSDateFormatter *)formatter
 {
     if (! _formatter) {
@@ -153,7 +142,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRowAtIndexPath %ld", (long)indexPath.row);
     if (indexPath.row > 0 && [self.dateTableDelegate respondsToSelector:@selector(dateTable:didTapTaskWithHours:)])
     {
         [self.dateTableDelegate dateTable:self didTapTaskWithHours:[self.startTimesAndEndTimes objectAtIndex:indexPath.row-1]];

@@ -51,7 +51,7 @@
     NSAssert(self.theEndHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
     NSAssert(self.theHeaders, NSLocalizedString(@"Yo, there ain't no headers", nil));
     
-    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:128 andYoffset:0 withDimension:768];
+    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:0 andYoffset:0 withDimension:768];
     self.calendar.delegate = self;
     self.orientationDate = [NSDate date];
     NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];

@@ -14,11 +14,11 @@
 		<string>https://github.com/Leveton/MELiPadCalendar.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Demo/iPadCalendar.xcodeproj</string>
+	<string>iPadCalendar.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>1D029059ADB0FB4912FB7103E9510ADFDACC13D8</key>
-		<string>../../..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/Leveton/MELiPadCalendar.git</string>
