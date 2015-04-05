@@ -142,9 +142,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row > 0 && [self.dateTableDelegate respondsToSelector:@selector(dateTable:didTapTaskWithHours:)])
+    if ([self.dateTableDelegate respondsToSelector:@selector(dateTable:didTapTaskWithHours:forDate:)])
     {
-        [self.dateTableDelegate dateTable:self didTapTaskWithHours:[self.startTimesAndEndTimes objectAtIndex:indexPath.row-1]];
+        if (indexPath.row > 0)
+        {
+            [self.dateTableDelegate dateTable:self didTapTaskWithHours:[self.startTimesAndEndTimes objectAtIndex:indexPath.row-1] forDate:self.date];
+        }
+        else
+        {
+            [self.dateTableDelegate dateTable:self didTapTaskWithHours:@"" forDate:self.date];
+        }
     }
 }
 

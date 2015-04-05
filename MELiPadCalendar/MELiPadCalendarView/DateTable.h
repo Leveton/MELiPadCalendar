@@ -34,6 +34,6 @@
 
 @optional
 
-- (void)dateTable:(DateTable *)dateTable didTapTaskWithHours:(NSString *)hours;
+- (void)dateTable:(DateTable *)dateTable didTapTaskWithHours:(NSString *)hours forDate:(NSDate *)date;
 
 @end

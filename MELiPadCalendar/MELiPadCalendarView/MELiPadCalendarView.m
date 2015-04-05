@@ -493,12 +493,12 @@
 
 #pragma mark - DateTableDelegate
 
-- (void)dateTable:(DateTable *)dateTable didTapTaskWithHours:(NSString *)hours
+- (void)dateTable:(DateTable *)dateTable didTapTaskWithHours:(NSString *)hours forDate:(NSDate *)date
 {
     NSLog(@"hours: %@", hours);
-    if ([_delegate respondsToSelector:@selector(calendar:didTapTaskWithHours:)])
+    if ([_delegate respondsToSelector:@selector(calendar:didTapTaskWithHours:forDate:)])
     {
-        [_delegate calendar:self didTapTaskWithHours:hours];
+        [_delegate calendar:self didTapTaskWithHours:hours forDate:date];
     }
 }
 

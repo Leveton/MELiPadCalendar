@@ -96,10 +96,10 @@
     [self.view addSubview:nextCalendar];
 }
 
-- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours forDate:(NSDate *)date
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                    message:hours
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:hours
+                                                    message:[self.dateFormatter stringFromDate:date]
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];

@@ -41,10 +41,10 @@ calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
 
 Have your view controller conform to the MELiPadCalendarDelegate so that you can change months and receive data when a row in the day is tapped.
 
-For when a user taps on a task on one of the dates:
+if a user taps on any date, the delegate gets the date chosen, if they tap on a task, the delegate also gets the hour range for that task:
 
 ``` objc
-- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours;
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours forDate:(NSDate *)date;
 ```
 
 For transitioning months, you can either prepare the calendar in the delegate like I do in the demo project, or you can fork this control and prepare it in the view itself.

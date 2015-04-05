@@ -50,6 +50,6 @@
 
 @optional
 
-- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours;
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours forDate:(NSDate *)date;
 
 @end
