@@ -21,11 +21,14 @@
     if (self != nil)
     {
          _tableViewHeight = frame.size.height;
+        [self setSeparatorColor:[UIColor clearColor]];
+        [self setSeparatorStyle:UITableViewCellSeparatorStyleNone];
          self.tableFooterView = [UIView new];
 
     }
     return self;
 }
+
 
 - (void)setDate:(NSDate *)date
 {
@@ -33,10 +36,19 @@
     self.tableDataArray = [NSMutableArray array];
     self.startTimesAndEndTimes = [NSMutableArray array];
     NSString *dash = @" - ";
+    
     _date = date;
-    NSDateComponents *comps = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:date];
-        
-    [self.tableDataArray addObject:[NSString stringWithFormat:@"%ld", (long)comps.day]];
+    
+    if (date)
+    {
+        NSDateComponents *dateComponents = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit fromDate:date];
+        [self.tableDataArray addObject:[NSString stringWithFormat:@"%ld", (long)dateComponents.day]];
+    }
+    else
+    {
+        [self.tableDataArray addObject:@""];
+    }
+    
     
     if (self.dateTotal != 0)
     {
@@ -93,6 +105,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
+    cell.textLabel.adjustsFontSizeToFitWidth = YES;
+    [cell.textLabel setMinimumScaleFactor:0.05];
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:(_tableViewHeight/9.8f)];
+    cell.textLabel.font = font;
+    
     if (self.tableDataArray.count > indexPath.row)
     {
         NSString *cellData = [self.tableDataArray objectAtIndex:indexPath.row];
@@ -105,16 +122,12 @@
     
     if (indexPath.row == 0)
     {
-        cell.textLabel.textColor = BlueColorMinus3;
-        UIFont *myFont = [ UIFont fontWithName: @"Georgia-Bold" size: (_tableViewHeight/9.8f)];
-        cell.textLabel.font = myFont;
+        cell.textLabel.textColor = [UIColor whiteColor];
         return cell;
     }
     else
     {
-        cell.textLabel.textColor = [UIColor redColor];
-        UIFont *myFont = [ UIFont fontWithName: @"Arial" size: (_tableViewHeight/9.8f)];
-        cell.textLabel.font = myFont;
+        cell.textLabel.textColor = REDCOLORPlUS2;
         return cell;
 
     }
@@ -124,11 +137,11 @@
 {
     if (indexPath.row == 0)
     {
-        cell.backgroundColor = lightBlueDateColor;
+        cell.backgroundColor = REDCOLORMINUS2;
     }
     else
     {
-        cell.backgroundColor = f5f5f5;
+        cell.backgroundColor = WHITECOLORPLUSONE;
     }
     
 }
@@ -141,6 +154,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"didSelectRowAtIndexPath %ld", (long)indexPath.row);
+    if (indexPath.row > 0 && [self.dateTableDelegate respondsToSelector:@selector(dateTable:didTapTaskWithHours:)])
+    {
+        [self.dateTableDelegate dateTable:self didTapTaskWithHours:[self.startTimesAndEndTimes objectAtIndex:indexPath.row-1]];
+    }
 }
 
 

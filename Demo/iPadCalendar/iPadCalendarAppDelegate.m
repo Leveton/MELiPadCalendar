@@ -7,14 +7,15 @@
 //
 
 #import "iPadCalendarAppDelegate.h"
+#import "viewController.h"
 
 @implementation iPadCalendarAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.viewController = [[viewController alloc] init];
-    self.window.rootViewController = self.viewController;
+    UIViewController *vc = [[viewController alloc] init];
+    self.window.rootViewController = vc;
     [self.window makeKeyAndVisible];
     return YES;
 }

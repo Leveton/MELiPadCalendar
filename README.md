@@ -1,8 +1,7 @@
 MELiPadCalendar
 =======
 
-Calendar for the iPad with UITableViews to display schedule data, extends [CKCalendar](https://github.com/jaykz52/CKCalendar).
-Table rows and font sizes scale dynamically depending on how large you make the calendar.
+Calendar for the iPad with table views to display and return scheduling data.
 
 <img src="https://raw.github.com/Leveton/MELiPadCalendar/master/screenshots/calendar.png" alt="TSNavigationStripView examples" width="680" height="484" />
 
@@ -16,88 +15,69 @@ Table rows and font sizes scale dynamically depending on how large you make the 
 ## Demo
 
 Build and run the `iPadCalendar` project in Xcode. 
-I've included a JSON file and its dependencies in the demo to simulate an API response.
+I've included a JSON file for adding todo times, start times, end times, and event labels.
 
 ## Installation
 
-Drop the `MELiPadCalendar` folder into your project.
+Drop the `MELiPadCalendar` folder into your project.  Make sure 'Copy items if needed' and 'Create groups' is checked.
+
 Add `QuartzCore.framework` and `EventKit.framework` if you don't already have them in your project.
 
 ## Use
 
-Make sure you declare an instance of `MELiPadCalendarView`, `NSDate`, and `CGRect` as either properties or ivars.
+Have your view controller conform to the MELiPadCalendarDelegate so that you can change months and receive data on when a row in the day is tapped.
 
 Before initiating the calendar, initiate three arrays, one for the dates which will contain data, another for the todo start times and another for the todo end times.
 
-After that, you can hit your API where you'll populate the three arrays before adding the calendar to some method.
+You can send the calendar arrays of todo dates, start hours, end hours, and header labels.
 
-```objc
-- (id)init {
-    self = [super init];
-    if (self)
-    {
-        self.theTodoDates = [[NSMutableArray alloc]init];
-        self.theStartHours = [[NSMutableArray alloc]init];
-        self.theEndHours = [[NSMutableArray alloc]init];
-        
-        //hit the API
-        [self getTodoTimeStamps];
-    }
-    return self;
-}
-```
 
-Initiate the calendar.
+Initiate the calendar:
 The frame and date need to be captured for transitioning between months.
 
 ```objc
-	calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:CGRectMake(127,20,770,640)];
-    
-    calendar.delegate = self;
-    frameChosen = calendar.frame;
-    orientationDate = [NSDate date];
-    [self.view addSubview:calendar];
+	self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:128 andYoffset:0 withDimension:768];
+    self.calendar.delegate = self;
+    self.orientationDate = [NSDate date];
+    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
+    [self.view addSubview:self.calendar];
 ```
 
-- initWithStartDay can either be startSunday or startMonday and the date range will be Sunday to Saturday or Monday to Sunday respectively.
-
-- dates is an NSMutableArray that stores the dates which have data that needs to be shown.
-
-- startTimes is an NSMutableArray that stores the beginning time for the todo.
-
-- endTimes is an NSMutableArray that stores the end time for the todo.
-
-When a user attempts to move to the previous or next month, the calendar will call `transitionToPreviousMonth` and `transitionToNextMonth` respectively on the delegate.
+When a user attempts to move to the previous or next month, the calendar will call `transitionMonth:` on the delegate.
 In these methods, the entire calendar must be removed and reinitiated in order to accomodate larger months such as June, and any new data.
 
 ``` objc
-- (void)transitionToPreviousMonth
+- (void)transitionMonth:(BOOL)forward
 {
+    CGRect frameChosen = self.calendar.frame;
+    
     [self.calendar removeFromSuperview];
+    self.calendar = nil;
     
-    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents* comps = [[NSDateComponents alloc] init];
-    [comps setMonth:-1];
-    self.orientationDate = [calendarForOrientation dateByAddingComponents:comps toDate:self.orientationDate options:0];
+    if (forward)
+    {
+        [self.dateComponents setMonth:1];
+    }
+    else
+    {
+        [self.dateComponents setMonth:-1];
+    }
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    dateFormatter.dateFormat = @"MM/dd/yyyy";
-    
-    NSString *stringFromDate = [dateFormatter stringFromDate:self.orientationDate];
-    
-    calendar = [[MELiPadCalendarView alloc] initWithStartDay:startSunday dates:theTodoDates startTimes:theStartHours endTimes:theEndHours frame:frameChosen];
-    
-    calendar.delegate = self;
-    calendar.selectedDate = [dateFormatter dateFromString:stringFromDate];
-    
-    [self.view addSubview:calendar];
+    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:self.dateComponents toDate:self.orientationDate options:0];
+    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:frameChosen.origin.x andYoffset:frameChosen.origin.y withDimension:frameChosen.size.width];
+    self.calendar.delegate = self;
+    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
+    [self.view addSubview:self.calendar];
 }
 ```
 ##Customizing
 
 - Fonts, text colors, and background colors of nearly every element can be customized.
 
-- For more info, please see [CKCalendar](https://github.com/jaykz52/CKCalendar), the project this one is based on.
 
 ## Contact
 
@@ -108,7 +88,7 @@ In these methods, the entire calendar must be removed and reinitiated in order t
 
 MELiPadCalendar is available under the MIT license.
 
-Copyright © 2013 Mike Leveton
+Copyright © 2015 Mike Leveton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

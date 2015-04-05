@@ -36,6 +36,6 @@
 
 @optional
 
-- (void)dateTable:(DateTable *)dateTable didTapRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)dateTable:(DateTable *)dateTable didTapTaskWithHours:(NSString *)hours;
 
 @end

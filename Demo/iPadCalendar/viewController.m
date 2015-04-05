@@ -12,7 +12,6 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @property (nonatomic, strong) NSCalendar *calendarForOrientation;
 @property (nonatomic, strong) NSDateComponents *dateComponents;
-@property CGRect frameChosen;
 
 @end
 
@@ -38,31 +37,29 @@
     
     [super viewDidLoad];
     
+    self.dateFormatter = [[NSDateFormatter alloc]init];
+    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
+    
+    self.calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    self.dateComponents = [[NSDateComponents alloc] init];
+    
     //hit the dummy API from the JSON file
     [self getTheDummyJson];
     
     NSAssert(self.theTodoDates, NSLocalizedString(@"Yo, there ain't no dates", nil));
     NSAssert(self.theStartHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
     NSAssert(self.theEndHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
+    NSAssert(self.theHeaders, NSLocalizedString(@"Yo, there ain't no headers", nil));
     
-    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:CGRectMake(127, 20, 770, 640)];
-    
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    
+    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:128 andYoffset:0 withDimension:768];
     self.calendar.delegate = self;
-    self.frameChosen = self.calendar.frame;
-    
     self.orientationDate = [NSDate date];
-    self.dateFormatter = [[NSDateFormatter alloc]init];
-    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
-    
-    /*highlight the current date, or a range of dates*/
-    NSString *stringFromDate = [self.dateFormatter stringFromDate: self.orientationDate];
+    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
     self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
     [self.view addSubview:self.calendar];
     
-    self.view.backgroundColor = BlueColor;
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,64 +67,50 @@
     [super didReceiveMemoryWarning];
 }
 
-
-#pragma mark - utilities
-
-- (void)transitionToPreviousMonth
+- (BOOL)prefersStatusBarHidden
 {
-    [self.calendar removeFromSuperview];
-    self.calendar = nil;
-    
-    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-    [dateComponents setMonth:-1];
-    self.orientationDate = [calendarForOrientation dateByAddingComponents:dateComponents toDate:self.orientationDate options:0];
-    
-    self.dateFormatter = [[NSDateFormatter alloc]init];
-    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
-    
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
-    
-    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:self.frameChosen];
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    self.calendar.delegate = self;
-    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    
-    [self.view addSubview:self.calendar];
-}
-
-- (void)transitionToNextMonth
-{
-    
-    [self.calendar removeFromSuperview];
-    self.calendar = nil;
-    
-    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-    [dateComponents setMonth:1];
-    self.orientationDate = [calendarForOrientation dateByAddingComponents:dateComponents toDate:self.orientationDate options:0];
-    
-    self.dateFormatter = [[NSDateFormatter alloc]init];
-    self.dateFormatter.dateFormat = @"MM/dd/yyyy";
-    
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
-    
-    self.calendar = [[MELiPadCalendarView alloc]initWithStartDay:startSunday frame:self.frameChosen];
-    
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    
-    self.calendar.delegate = self;
-    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    
-    [self.view addSubview:self.calendar];
+    return YES;
 }
 
 #pragma mark - MELiPadDelegate
 
-- (void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date
+- (void)transitionMonth:(BOOL)forward
 {
-    NSLog(@"you've reached didselect date in viewcontroller");
+    CGRect frameChosen = self.calendar.frame;
+    
+    [self.calendar removeFromSuperview];
+    self.calendar = nil;
+    
+    if (forward)
+    {
+        [self.dateComponents setMonth:1];
+    }
+    else
+    {
+        [self.dateComponents setMonth:-1];
+    }
+    
+    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:self.dateComponents toDate:self.orientationDate options:0];
+    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:frameChosen.origin.x andYoffset:frameChosen.origin.y withDimension:frameChosen.size.width];
+    self.calendar.delegate = self;
+    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
+    [self.view addSubview:self.calendar];
 }
+
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                    message:hours
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+
+}
+
+
 
 #pragma mark - dummy API call
 
@@ -195,7 +178,6 @@
     }
     
 }
-
 
 #pragma mark - formatting dummy JSON
 
