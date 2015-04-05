@@ -3,15 +3,12 @@
 
 @interface viewController ()<MELiPadCalendarDelegate>
 
-@property (nonatomic, strong) MELiPadCalendarView *calendar;
 @property (nonatomic, strong) NSDate *orientationDate;
 @property (nonatomic, strong) NSMutableArray *theStartHours;
 @property (nonatomic, strong) NSMutableArray *theEndHours;
 @property (nonatomic, strong) NSMutableArray *theTodoDates;
 @property (nonatomic, strong) NSMutableArray *theHeaders;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
-@property (nonatomic, strong) NSCalendar *calendarForOrientation;
-@property (nonatomic, strong) NSDateComponents *dateComponents;
 
 @end
 
@@ -40,9 +37,6 @@
     self.dateFormatter = [[NSDateFormatter alloc]init];
     self.dateFormatter.dateFormat = @"MM/dd/yyyy";
     
-    self.calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    self.dateComponents = [[NSDateComponents alloc] init];
-    
     //hit the dummy API from the JSON file
     [self getTheDummyJson];
     
@@ -51,13 +45,13 @@
     NSAssert(self.theEndHours, NSLocalizedString(@"Yo, there ain't no dates", nil));
     NSAssert(self.theHeaders, NSLocalizedString(@"Yo, there ain't no headers", nil));
     
-    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:0 andYoffset:0 withDimension:768];
-    self.calendar.delegate = self;
+    MELiPadCalendarView *calendar = [[MELiPadCalendarView alloc]initWithXoffset:0 andYoffset:0 withDimension:768];
+    calendar.delegate = self;
     self.orientationDate = [NSDate date];
     NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
-    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    [self.view addSubview:self.calendar];
+    calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    [calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
+    [self.view addSubview:calendar];
     
     self.view.backgroundColor = [UIColor clearColor];
 }
@@ -74,29 +68,32 @@
 
 #pragma mark - MELiPadDelegate
 
-- (void)transitionMonth:(BOOL)forward
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTransitionMonth:(BOOL)forward
 {
-    CGRect frameChosen = self.calendar.frame;
+    CGRect frameChosen = calendar.frame;
     
-    [self.calendar removeFromSuperview];
-    self.calendar = nil;
+    [calendar removeFromSuperview];
+    calendar = nil;
+    
+    NSCalendar *calendarForOrientation = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     
     if (forward)
     {
-        [self.dateComponents setMonth:1];
+        [dateComponents setMonth:1];
     }
     else
     {
-        [self.dateComponents setMonth:-1];
+        [dateComponents setMonth:-1];
     }
     
-    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:self.dateComponents toDate:self.orientationDate options:0];
+    self.orientationDate = [calendarForOrientation dateByAddingComponents:dateComponents toDate:self.orientationDate options:0];
     NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
-    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:frameChosen.origin.x andYoffset:frameChosen.origin.y withDimension:frameChosen.size.width];
-    self.calendar.delegate = self;
-    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    [self.view addSubview:self.calendar];
+    MELiPadCalendarView *nextCalendar = [[MELiPadCalendarView alloc]initWithXoffset:frameChosen.origin.x andYoffset:frameChosen.origin.y withDimension:frameChosen.size.width];
+    nextCalendar.delegate = self;
+    nextCalendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+    [nextCalendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
+    [self.view addSubview:nextCalendar];
 }
 
 - (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours

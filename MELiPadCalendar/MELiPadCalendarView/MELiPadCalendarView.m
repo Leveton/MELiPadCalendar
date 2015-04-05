@@ -321,12 +321,12 @@
 
 - (void)moveCalendarToNextMonth
 {
-    [_delegate transitionMonth:YES];
+    [_delegate calendar:self didTapTransitionMonth:YES];
 }
 
 - (void)moveCalendarToPreviousMonth
 {
-    [_delegate transitionMonth:NO];
+    [_delegate calendar:self didTapTransitionMonth:NO];
 }
 
 #pragma mark - getters and setters

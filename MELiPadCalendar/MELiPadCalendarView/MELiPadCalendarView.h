@@ -46,7 +46,7 @@
 
 @protocol MELiPadCalendarDelegate <NSObject>
 
-- (void)transitionMonth:(BOOL)forward;
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTransitionMonth:(BOOL)forward;
 
 @optional
 
