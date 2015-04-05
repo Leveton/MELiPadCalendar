@@ -9,32 +9,53 @@
 #import "DateTable.h"
 
 
-@interface DateTable ()
+@interface DateTable () <UITableViewDelegate, UITableViewDataSource>
 
 @end
 
 @implementation DateTable
-@synthesize date = _date;
-@synthesize calendar = _calendar;
-@synthesize arrayOfDates = _arrayOfDates;
-@synthesize arrayOfStartTimes = _arrayOfStartTimes;
-@synthesize arrayOfEndTimes = _arrayOfEndTimes;
-@synthesize startTimesAndEndTimes = _startTimesAndEndTimes;
-@synthesize dataForTable = _dataForTable;
-@synthesize jobForDate = _jobForDate;
-@synthesize dateTotal, tableViewHeight;
+
+-(id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self != nil)
+    {
+         _tableViewHeight = frame.size.height;
+        [self setSeparatorColor:[UIColor clearColor]];
+        [self setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+         self.tableFooterView = [UIView new];
+
+    }
+    return self;
+}
+
 
 - (void)setDate:(NSDate *)date
 {
     self.dateTotal = 0;
-    self.dataForTable = [NSMutableArray array];
+    self.tableDataArray = [NSMutableArray array];
     self.startTimesAndEndTimes = [NSMutableArray array];
     NSString *dash = @" - ";
+    
     _date = date;
-    NSDateComponents *comps = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:date];
-        
-    [self.dataForTable addObject:[NSString stringWithFormat:@"%d", comps.day]];
-
+    
+    if (date)
+    {
+        NSDateComponents *dateComponents = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit fromDate:date];
+        [self.tableDataArray addObject:[NSString stringWithFormat:@"%ld", (long)dateComponents.day]];
+    }
+    else
+    {
+        [self.tableDataArray addObject:@""];
+    }
+    
+    
+    if (self.dateTotal != 0)
+    {
+        NSString *numOfDates = [NSString stringWithFormat:@"Todos: %ld", (long)self.dateTotal];
+        [self.tableDataArray addObject:numOfDates];
+    }
+    
     NSString *dateString = [self.formatter stringFromDate:date];
     
     NSUInteger datesTotal = [self.arrayOfDates count];
@@ -43,20 +64,14 @@
     {
         if ([[self.arrayOfDates objectAtIndex:i] isEqualToString:dateString])
         {
-            //call method to concatinate times here
+            
             [self.startTimesAndEndTimes addObject:[[self.arrayOfStartTimes objectAtIndex:i] stringByAppendingString:[dash stringByAppendingString:[self.arrayOfEndTimes objectAtIndex:i]]]];
+            
+            [self.tableDataArray addObject:[self.arrayOfHeaders objectAtIndex:i]];
             
                 self.dateTotal++;
         }
     }
-
-    
-    if (self.dateTotal != 0)
-    {
-        NSString *numOfDates = [NSString stringWithFormat:@"Todos: %d", self.dateTotal];
-        [self.dataForTable addObject:numOfDates];
-    }
-    [self.dataForTable addObjectsFromArray:self.startTimesAndEndTimes];
         
 }
 
@@ -72,39 +87,48 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    tableViewHeight = tableView.frame.size.height;//this delegate gets called first, so set it here.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.dataForTable count];
+    
+    return [self.tableDataArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier1 = @"Cell";
-    UITableViewCell *cell1 = [tableView dequeueReusableCellWithIdentifier:CellIdentifier1];
-    if (cell1 == nil) {
-        cell1 = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier1];
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    NSString *cellData = [self.dataForTable objectAtIndex:indexPath.row];
-    cell1.textLabel.text = cellData;
+    cell.textLabel.adjustsFontSizeToFitWidth = YES;
+    [cell.textLabel setMinimumScaleFactor:0.05];
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:(_tableViewHeight/9.8f)];
+    cell.textLabel.font = font;
     
-    if (indexPath.row == 0)
+    if (self.tableDataArray.count > indexPath.row)
     {
-        cell1.textLabel.textColor = BlueColorMinus3;
-        UIFont *myFont = [ UIFont fontWithName: @"Georgia-Bold" size: (tableViewHeight/9.8f)];
-        cell1.textLabel.font = myFont;
-        return cell1;
+        NSString *cellData = [self.tableDataArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = cellData;
     }
     else
     {
-        cell1.textLabel.textColor = [UIColor redColor];
-        UIFont *myFont = [ UIFont fontWithName: @"Arial" size: (tableViewHeight/9.8f)];
-        cell1.textLabel.font = myFont;
-        return cell1;
+        cell.textLabel.text = @"";
+    }
+    
+    if (indexPath.row == 0)
+    {
+        cell.textLabel.textColor = [UIColor whiteColor];
+        return cell;
+    }
+    else
+    {
+        cell.textLabel.textColor = REDCOLORPlUS2;
+        return cell;
 
     }
 }
@@ -113,28 +137,28 @@
 {
     if (indexPath.row == 0)
     {
-        cell.backgroundColor = lightBlueDateColor;
+        cell.backgroundColor = REDCOLORMINUS2;
     }
     else
     {
-        cell.backgroundColor = f5f5f5;
+        cell.backgroundColor = WHITECOLORPLUSONE;
     }
     
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (tableViewHeight/6);
+    return (_tableViewHeight/6);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Date %ld", (long)indexPath.row);
+    NSLog(@"didSelectRowAtIndexPath %ld", (long)indexPath.row);
+    if (indexPath.row > 0 && [self.dateTableDelegate respondsToSelector:@selector(dateTable:didTapTaskWithHours:)])
+    {
+        [self.dateTableDelegate dateTable:self didTapTaskWithHours:[self.startTimesAndEndTimes objectAtIndex:indexPath.row-1]];
+    }
 }
 
--(void)calendar:(MELiPadCalendarView *)calendar didSelectDate:(NSDate *)date
-{
-    NSLog(@"Date %@", date);
-}
 
 @end
