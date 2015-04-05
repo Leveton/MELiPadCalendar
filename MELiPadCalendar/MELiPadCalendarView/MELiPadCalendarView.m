@@ -63,43 +63,65 @@
     
     self.layer.cornerRadius = 6.0f;
     
-    // SET UP THE HEADER
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-    [self addSubview:titleLabel];
-    _titleLabel = titleLabel;
+    if (_titleLabel)
+    {
+        [_titleLabel removeFromSuperview];
+        _titleLabel = nil;
+    }
     
-    UIButton *prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [prevButton setImage:[UIImage imageNamed:@"left_arrow"] forState:UIControlStateNormal];
-    prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-    [prevButton addTarget:self action:@selector(moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:prevButton];
-    _prevButton = prevButton;
+    if (_prevButton)
+    {
+        [_prevButton removeFromSuperview];
+        _prevButton = nil;
+    }
     
-    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nextButton setImage:[UIImage imageNamed:@"right_arrow"] forState:UIControlStateNormal];
-    nextButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
-    [nextButton addTarget:self action:@selector(moveCalendarToNextMonth) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:nextButton];
-    _nextButton = nextButton;
+    if (_nextButton)
+    {
+        [_nextButton removeFromSuperview];
+        _nextButton = nil;
+    }
     
-    // THE CALENDAR ITSELF
-    UIView *calendarContainer = [[UIView alloc] initWithFrame:CGRectZero];
-    calendarContainer.layer.borderWidth = 0.5f;
-    calendarContainer.layer.borderColor = REDCOLORMINUS2.CGColor;
-    calendarContainer.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    calendarContainer.layer.cornerRadius = 4.0f;
-    calendarContainer.clipsToBounds = YES;
-    [self addSubview:calendarContainer];
-    _calendarContainer = calendarContainer;
+    if (_calendarContainer)
+    {
+        [_calendarContainer removeFromSuperview];
+        _calendarContainer = nil;
+    }
     
-    //GradientView *daysHeader = [[GradientView alloc] initWithFrame:CGRectZero];
-    UIView *daysHeader = [[UIView alloc]initWithFrame:CGRectZero];
-    daysHeader.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
-    [_calendarContainer addSubview:daysHeader];
-    _daysHeader = daysHeader;
+    if (_daysHeader)
+    {
+        [_daysHeader removeFromSuperview];
+        _daysHeader = nil;
+    }
+    
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+    [self addSubview:_titleLabel];
+    
+    _prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_prevButton setImage:[UIImage imageNamed:@"left_arrow"] forState:UIControlStateNormal];
+    _prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    [_prevButton addTarget:self action:@selector(moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_prevButton];
+    
+    _nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_nextButton setImage:[UIImage imageNamed:@"right_arrow"] forState:UIControlStateNormal];
+    _nextButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+    [_nextButton addTarget:self action:@selector(moveCalendarToNextMonth) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_nextButton];
+    
+    _calendarContainer = [[UIView alloc] initWithFrame:CGRectZero];
+    _calendarContainer.layer.borderWidth = 0.5f;
+    _calendarContainer.layer.borderColor = REDCOLORMINUS2.CGColor;
+    _calendarContainer.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    _calendarContainer.layer.cornerRadius = 4.0f;
+    _calendarContainer.clipsToBounds = YES;
+    [self addSubview:_calendarContainer];
+    
+    _daysHeader = [[UIView alloc]initWithFrame:CGRectZero];
+    _daysHeader.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+    [_calendarContainer addSubview:_daysHeader];
     
     NSMutableArray *labels = [NSMutableArray array];
     
@@ -124,6 +146,7 @@
     [self layoutSubviews];
 }
 
+/* datasource */
 - (void)setUpTheTodoDates:(NSArray *)todoDates withStartTimes:(NSArray *)startTimes andEndTimes:(NSArray *)endTimes andHeaders:(NSArray *)headers
 {
     if (!_dateButtonArray)

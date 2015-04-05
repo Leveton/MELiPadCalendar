@@ -30,16 +30,16 @@ The demo provides a datasource by initiating four arrays, one for the dates whic
 Initiate the calendar with its x Offset, y Offset and side dimension.  To stay in tune with Apple's [Human Interface Guidelines,](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/) I keep the view a perfect square and prevent it from being less than 512 or greater than 768.  That will fit two calendars in landscape.
 
 ```objc
-     MELiPadCalendarView *calendar = [[MELiPadCalendarView alloc]initWithXoffset:0 andYoffset:0 withDimension:768];
-    calendar.delegate = self;
-    self.orientationDate = [NSDate date];
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
-    calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    [calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    [self.view addSubview:calendar];
+MELiPadCalendarView *calendar = [[MELiPadCalendarView alloc]initWithXoffset:0 andYoffset:0 withDimension:768];
+calendar.delegate = self;
+self.orientationDate = [NSDate date];
+NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
+calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
+[calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
+[self.view addSubview:calendar];
 ```
 
-Have your view controller conform to the MELiPadCalendarDelegate so that you can change months and receive data on when a row in the day is tapped.
+Have your view controller conform to the MELiPadCalendarDelegate so that you can change months and receive data when a row in the day is tapped.
 
 For when a user taps on a task on one of the dates:
 
@@ -47,34 +47,12 @@ For when a user taps on a task on one of the dates:
 - (void)calendar:(MELiPadCalendarView *)calendar didTapTaskWithHours:(NSString *)hours;
 ```
 
-For when a user attempts move to the previous or next month:
+For transitioning months, you can either prepare the calendar in the delegate like I do in the demo project, or you can fork this control and prepare it in the view itself.
 
 ``` objc
-- (void)transitionMonth:(BOOL)forward
-{
-    CGRect frameChosen = self.calendar.frame;
-    
-    [self.calendar removeFromSuperview];
-    self.calendar = nil;
-    
-    if (forward)
-    {
-        [self.dateComponents setMonth:1];
-    }
-    else
-    {
-        [self.dateComponents setMonth:-1];
-    }
-    
-    self.orientationDate = [self.calendarForOrientation dateByAddingComponents:self.dateComponents toDate:self.orientationDate options:0];
-    NSString *stringFromDate = [self.dateFormatter stringFromDate:self.orientationDate];
-    self.calendar = [[MELiPadCalendarView alloc]initWithXoffset:frameChosen.origin.x andYoffset:frameChosen.origin.y withDimension:frameChosen.size.width];
-    self.calendar.delegate = self;
-    self.calendar.selectedDate = [self.dateFormatter dateFromString:stringFromDate];
-    [self.calendar setUpTheTodoDates:self.theTodoDates withStartTimes:self.theStartHours andEndTimes:self.theEndHours andHeaders:self.theHeaders];
-    [self.view addSubview:self.calendar];
-}
+- (void)calendar:(MELiPadCalendarView *)calendar didTapTransitionMonth:(BOOL)forward;
 ```
+
 ##Customizing
 
 - Fonts, text colors, and background colors for most elements can be customized.
